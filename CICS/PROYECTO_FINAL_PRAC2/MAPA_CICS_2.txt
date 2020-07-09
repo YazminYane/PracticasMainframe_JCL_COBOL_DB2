@@ -1,0 +1,41 @@
+MAPASET  DFHMSD TYPE=DSECT,MODE=INOUT,LANG=COBOL,TERM=ALL,             X00010000
+               STORAGE=AUTO                                             00011000
+MAPA2    DFHMDI SIZE=(24,80),LINE=1,COLUMN=1,HILIGHT=OFF,              X00020000
+               DSATTS=HILIGHT,CTRL=FREEKB                               00030000
+*                                                                       00031001
+         DFHMDF POS=(1,1),LENGTH=8,INITIAL='TRX MAP2',                 X00040001
+               ATTRB=(ASKIP,NORM)                                       00050001
+         DFHMDF POS=(1,30),LENGTH=18,INITIAL='CONSULTA DE NUMERO',     X00060000
+               ATTRB=(ASKIP,NORM)                                       00070001
+         DFHMDF POS=(1,49),LENGTH=8,INITIAL='EMPLEADO',                X00080000
+               ATTRB=(ASKIP,NORM)                                       00090001
+         DFHMDF POS=(5,1),LENGTH=16,INITIAL='TECLEE NUMERO DE',        X00100001
+               ATTRB=(ASKIP,NORM)                                       00110001
+         DFHMDF POS=(5,19),LENGTH=19,INITIAL='EMPLEADO Y PRESIONE',    X00120000
+               ATTRB=(ASKIP,NORM)                                       00130001
+         DFHMDF POS=(5,39),LENGTH=5,INITIAL='ENTER',                   X00140000
+               ATTRB=(ASKIP,NORM)                                       00150001
+         DFHMDF POS=(7,1),LENGTH=17,INITIAL='NUMERO EMPLEADO :',       X00151001
+               ATTRB=(ASKIP,NORM)                                       00152001
+NUMEMP   DFHMDF POS=(7,20),LENGTH=6,INITIAL='______',                  X00152100
+               ATTRB=(UNPROT,NUM,IC)                                    00152201
+         DFHMDF POS=(7,27),LENGTH=1,INITIAL=' ',                       X00152300
+               ATTRB=(PROT,NORM)                                        00152400
+         DFHMDF POS=(9,1),LENGTH=17,INITIAL='DATOS EMPLEADO  :',       X00152501
+               ATTRB=(ASKIP,NORM)                                       00152601
+*                                                                       00152701
+         DFHMDF POS=(11,1),LENGTH=2,INITIAL='--',ATTRB=(PROT)           00152801
+NOMBRE   DFHMDF POS=(11,4),LENGTH=40,ATTRB=(PROT,NORM)                  00155001
+*                                                                       00155101
+         DFHMDF POS=(12,1),LENGTH=2,INITIAL='--',ATTRB=(PROT)           00156001
+DEPART   DFHMDF POS=(12,4),LENGTH=3,ATTRB=(PROT,NORM)                   00158001
+*                                                                       00159001
+         DFHMDF POS=(13,1),LENGTH=2,INITIAL='--',ATTRB=(PROT)           00159101
+PUESTO   DFHMDF POS=(13,4),LENGTH=10,ATTRB=(PROT,NORM)                  00159301
+*                                                                       00159401
+         DFHMDF POS=(14,1),LENGTH=2,INITIAL='--',ATTRB=(PROT)           00159501
+SALARIO  DFHMDF POS=(14,4),LENGTH=10,ATTRB=(PROT,NORM)                  00159901
+MSG      DFHMDF POS=(16,10),LENGTH=40,ATTRB=(PROT,NORM)                 00160301
+         DFHMDF POS=(17,18),LENGTH=1,ATTRB=(FSET,PROT)                  00160401
+         DFHMSD TYPE=FINAL                                              00161000
+         END                                                            00170000

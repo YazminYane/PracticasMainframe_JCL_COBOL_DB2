@@ -1,0 +1,13 @@
+//ORDENAR  JOB CLASS=A,PRTY=15,MSGCLASS=X,                              00011000
+//             MSGLEVEL=(2,1),NOTIFY=&SYSUID                            00020000
+//*---------- ORDENA UN SECUENCIAL Y LO COLOCA EN OTRO --------------   00021001
+//PASO1    EXEC PGM=SORT                                                00030000
+//SORTIN   DD DSN=ACADEMIA.COBOL.DATOS,DISP=SHR                         00040000
+//SORTOUT  DD DSN=ACADEMIA.COBOL.DATORD,                                00050000
+//            DISP=(NEW,CATLG,DELETE),                                  00060000
+//            SPACE=(CYL,(20,20),RLSE),                                 00061000
+//            DCB=(DSORG=PS,RECFM=FB,LRECL=113)                         00063000
+//SYSOUT DD SYSOUT=* /* INDICA QUE EN EL SPOOL SE IMPRIMIRAN MSG        00070000
+//SYSIN DD *                                                            00080000
+           SORT FIELDS(1,8,CH,D)    /* D : ORDENA DECENDENTE            00090000
+/*                                                                      00100000

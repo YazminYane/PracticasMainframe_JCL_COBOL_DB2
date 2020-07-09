@@ -1,0 +1,69 @@
+      **=========================================================
+      **RUTINA PARA EL CALCULO DE LA COMISION
+      **=========================================================
+       IDENTIFICATION DIVISION.
+      ***********************************************************
+       PROGRAM-ID. CALCCOMS.
+       ENVIRONMENT DIVISION.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 PORCENTAJE         PIC 9(13)V99.
+       LINKAGE SECTION.
+       01 PARCOMISION.
+          05 PAR-LIMITE       PIC 9(13)V99.
+          05 PAR-IMPORUSADO   PIC 9(13)V99.
+          05 CALC-COMISION    PIC 9(13)V99.
+          05 PAR-CANAL        PIC X(4).
+          05 CALC-DESC        PIC 9(13)V99.
+          05 CALC-TOTAL       PIC 9(13)V99.
+      **================================================================
+       PROCEDURE DIVISION USING PARCOMISION.
+           IF PAR-LIMITE > 0
+              PERFORM 100-COMISIONES
+              PERFORM 200-CALCDESC
+              PERFORM 300-TOTAL
+             ELSE
+              GOBACK
+           END-IF.
+      **================================================================
+       100-COMISIONES.
+           COMPUTE PORCENTAJE = (PAR-IMPORUSADO * 100) / PAR-LIMITE
+           COMPUTE PORCENTAJE = PORCENTAJE * 100
+           IF PORCENTAJE < 20
+           COMPUTE CALC-COMISION = PAR-LIMITE + (PAR-LIMITE * 0.05)
+      ***************
+            ELSE IF PORCENTAJE > 20 AND <= 50
+              COMPUTE CALC-COMISION = PAR-LIMITE + (PAR-LIMITE * 0.1)
+      ***************
+                ELSE IF PORCENTAJE > 50 AND <= 75
+                  COMPUTE CALC-COMISION = PAR-LIMITE -                  5)
+                          + (PAR-LIMITE * 0.15)
+      **************
+                 ELSE IF PORCENTAJE > 75
+                   COMPUTE CALC-COMISION = PAR-LIMITE -                 2)
+                           + (PAR-LIMITE * 0.2)
+                 END-IF
+                END-IF
+            END-IF
+           END-IF.
+      **===============================================================
+       200-CALCDESC.
+           IF PAR-CANAL = 'BNET'
+                   COMPUTE CALC-DESC = CALC-COMISION * 0.02
+                 ELSE IF PAR-CANAL  = 'NETC'
+                    COMPUTE CALC-DESC =  CALC-COMISION * 0.02
+                   ELSE IF PAR-CANAL = 'BMOV'
+                      COMPUTE  CALC-DESC = CALC-COMISION * 0.02
+                     ELSE IF PAR-CANAL = 'TBAN'
+                           COMPUTE CALC-DESC = CALC-COMISION * 0.03
+                         ELSE
+                           COMPUTE CALC-DESC = CALC-COMISION * 0.01
+                        END-IF
+                     END-IF
+                   END-IF
+                 END-IF.
+      **   GOBACK.
+      **================================================================
+       300-TOTAL.
+           COMPUTE CALC-TOTAL = CALC-COMISION - CALC-DESC
+           GOBACK.

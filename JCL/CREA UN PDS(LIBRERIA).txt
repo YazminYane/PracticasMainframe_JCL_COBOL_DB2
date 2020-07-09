@@ -1,0 +1,11 @@
+//CREARPDS JOB CLASS=A,PRTY=15,MSGCLASS=A,MSGLEVEL=(1,1),               00010000
+//             NOTIFY=&SYSUID                                           00011000
+//*-------------------------------------------------------------        00020000
+//*                CREAR UN PDS(LIBRERIA)                               00030000
+//*-------------------------------------------------------------        00040000
+//PASO1 EXEC PGM=IEFBR14                                                00050000
+//CREAR DD DSN=ACADEMIA.COBOL.PDS,                                      00060000
+//         DISP=(NEW,CATLG,DELETE),                                     00070000
+//         SPACE=(CYL,(10,5,4),RLSE), /* 4 INDICA  BLOQUES D DIRECTORIO 00080001
+//         DCB=(LRECL=80,RECFM=FB,DSORG=PO)                             00090000
+/*                                                                      00100000

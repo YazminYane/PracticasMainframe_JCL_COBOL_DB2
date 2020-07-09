@@ -1,0 +1,15 @@
+//IEBGEN1 JOB CLASS=A,MSGCLASS=1,MSGLEVEL=(1,1),NOTIFY=&SYSUID,
+//            PRTY=15
+//*--------------------------------------------------------------
+//*       COPIAR UN PS(SECUENCIAL)
+//*--------------------------------------------------------------
+//PASO1   EXEC PGM=IEBGENER
+//SYSUT1  DD   DSN=ACADEMIA.COBOL.DATOS,DISP=SHR
+//SYSUT2  DD   DSN=ACADEMIA.COBOL.DATOS5,
+//             DISP=(NEW,CATLG,DELETE),
+//             SPACE=(TRK,(10,100),RLSE),
+//             DCB=(LRECL=113,RECFM=FB,DSORG=PS)
+//SYSPRINT DD  SYSOUT=*
+//SYSOUT   DD  SYSOUT=*
+//SYSIN    DD  DUMMY
+/*

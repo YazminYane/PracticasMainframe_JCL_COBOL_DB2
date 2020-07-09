@@ -1,0 +1,75 @@
+      *=====================================================
+      *  RUTINA QUE REALIZA LA CONSULTA DE UN EMPLEADO.
+      *=====================================================
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. RUTINACO.
+       ENVIRONMENT DIVISION.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 TEMP-SALARI1 PIC 9(11)V99.
+      *=====================================================
+            EXEC SQL
+               INCLUDE DCLEMP
+            END-EXEC.
+      *=====================================================
+            EXEC SQL
+               INCLUDE SQLCA
+            END-EXEC.
+      *=====================================================
+       LINKAGE SECTION.
+       01 DFHCOMMAREA.
+         05 R-EPNO          PIC X(6).
+         05 TEMP-NOMBRE-COM PIC X(40).
+         05 R-WORKDEPT      PIC X(3).
+         05 R-PUESTO        PIC X(15).
+         05 R-SALARY        PIC $99999.99.
+         05 R-MSG           PIC X(40).
+      *=====================================================
+       PROCEDURE DIVISION.
+       000-PRINCIPAL.
+           PERFORM 003-SELECCIONAR-DATOS
+           PERFORM 004-VALIDAR-CODIGO-SQL
+           GOBACK.
+      *=====================================================
+       003-SELECCIONAR-DATOS.
+           MOVE R-EPNO TO H-EMPNO
+             EXEC SQL
+                SELECT
+                       NOMBRE,
+                       APATERNO,
+                       AMATERNO,
+                       WORKDEPT,
+                       PUESTO,
+                       SALARY
+                INTO
+                     :H-NOMBRE,
+                     :H-APATERNO,
+                     :H-AMATERNO,
+                     :H-WORKDEPT,
+                     :H-PUESTO,
+                     :H-SALARY
+                FROM INDRA.EMP
+                WHERE EMPNO = :H-EMPNO
+             END-EXEC.
+      *=====================================================
+       004-VALIDAR-CODIGO-SQL.
+             IF SQLCODE = 0
+                 PERFORM 005-UNIR-NOMBRE
+                 MOVE H-WORKDEPT TO R-WORKDEPT
+                 MOVE H-PUESTO TO R-PUESTO
+                 MOVE H-SALARY TO TEMP-SALARI1
+                 MOVE TEMP-SALARI1 TO R-SALARY
+                 MOVE 'REGISTRO ENCONTRADO' TO R-MSG
+              ELSE
+                 MOVE 'REGISTRO NO ENCONTRADO' TO R-MSG
+             END-IF.
+      *=====================================================
+       005-UNIR-NOMBRE.
+                MOVE SPACES TO TEMP-NOMBRE-COM
+                STRING H-NOMBRE DELIMITED BY '  '
+                             ' ' DELIMITED BY SIZE
+                       H-APATERNO DELIMITED BY '  '
+                             ' ' DELIMITED BY SIZE
+                       H-AMATERNO DELIMITED BY '  '
+                INTO TEMP-NOMBRE-COM
+                END-STRING.

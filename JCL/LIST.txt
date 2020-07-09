@@ -1,0 +1,12 @@
+//LIST  JOB  CLASS=A,MSGCLASS=A,MSGLEVEL=(1,1),NOTIFI=&SYSUID
+//           PRTY=15
+//*---------------------------------------------------------------
+//*          LISTAR UN PDS CON LA LIBRERIA IEHLIST
+//*---------------------------------------------------------------
+//PASO1    EXEC PGM=IEHLIST
+//DD1      DD   UNIT=DISK,VOLUME=SER=PUB000,DISP=SHR <--VOL OF DATASET
+//SYSPRINT DD   SYSOUT=*
+//SYSOUT   DD   SYSOUT=*
+//SYSIN    DD   *
+          LISTPDS DSNAME=ABHI.COURSE.PDS1,VOLUME=DISK=PUB000  <--NAME
+/*

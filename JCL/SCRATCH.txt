@@ -1,0 +1,14 @@
+//LIST1 JOB  CLASS=A,MSGCLASS=A,MSGLEVEL=(1,1),NOTIFI=&SYSUID
+//           PRTY=15
+//*---------------------------------------------------------------
+//*          LISTAR UN VTOC  CON LA LIBRERIA IEHLIST
+//* NO PROBADO
+//*---------------------------------------------------------------
+//PASO1    EXEC PGM=IEHLIST
+//DD1      DD   UNIT=DISK,VOLUME=SER=PUB000,DISP=SHR <-- LOCATION
+//SYSPRINT DD   SYSOUT=*
+//SYSOUT   DD   SYSOUT=*
+//SYSIN    DD   *
+            SCRATCH DSNAME=ABHI.COURSE.PS0,VOL=DISK=PUB001
+            UNCATLG DSNAME=ABHI.COURSE.PS0
+/*

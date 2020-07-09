@@ -1,0 +1,45 @@
+//PCOMPILS JOB ('COBOL1'),'COMPILA',
+//         CLASS=A,MSGCLASS=X,REGION=0M,
+//         MSGLEVEL=(1,1),NOTIFY=&SYSUID
+//**********************************************************************
+//* INPUT AREA                                                         *
+//* MEMNAME=NOMBRE DEL PROGRAMA QUE LLAMA LA RUTINA                    *
+//* SOURCE=LIBRERIA EN LA QUE SE ENCUENTRA EL PROGRAMA                 *
+//* LOADLIB=LIBRERIA EN LA QUE SE VA A DEJAR EL MODULO CARGA           *
+//**********************************************************************
+// SET  MEMNAME=PRINCIPA
+// SET  SOURCE=IBMUSER.PO.SOURCE2
+// SET  LOADLIB=IBMUSER.PO.LOAD1
+//**********************************************************************
+//***** COBOL COMPILER                                                 *
+//**********************************************************************
+//COBCOMP  EXEC PGM=IGYCRCTL,PARM=(LIB,SOURCE,MAP,XREF,LIST,TEST)
+//SYSIN    DD DSN=&SOURCE(&MEMNAME),DISP=SHR
+//SYSLIN   DD DSNAME=&&LOADSET,UNIT=SYSDA,DISP=(MOD,PASS),
+//            SPACE=(TRK,(3,3))
+//SYSPRINT DD SYSOUT=*
+//SYSUT1   DD SPACE=(CYL,(1,1)),UNIT=SYSDA
+//SYSUT2   DD SPACE=(CYL,(1,1)),UNIT=SYSDA
+//SYSUT3   DD SPACE=(CYL,(1,1)),UNIT=SYSDA
+//SYSUT4   DD SPACE=(CYL,(1,1)),UNIT=SYSDA
+//SYSUT5   DD SPACE=(CYL,(1,1)),UNIT=SYSDA
+//SYSUT6   DD SPACE=(CYL,(1,1)),UNIT=SYSDA
+//SYSUT7   DD SPACE=(CYL,(1,1)),UNIT=SYSDA
+//**********************************************************************
+//***** LINK EDIT                                                      *
+//**********************************************************************
+//LKED     EXEC PGM=IEWL,
+//          PARM='RENT,REUS,LIST,XREF,LET,MAP,AMODE=31,RMODE=24,CALL',
+//          COND=(4,LT,COBCOMP)
+//SYSLIN   DD DSNAME=&&LOADSET,DISP=(OLD,DELETE)
+//         DD DDNAME=SYSIN
+//SYSLMOD  DD DSNAME=&LOADLIB(&MEMNAME),
+//            DISP=SHR
+//SYSLIB   DD DSN=CEE.SCEELKED,DISP=SHR
+//         DD DSN=CEE.SCEERUN,DISP=SHR
+//         DD DISP=SHR,DSN=ISP.SISPLOAD
+//         DD DISP=SHR,DSN=&LOADLIB
+//SYSUT1   DD SPACE=(CYL,(1,1)),UNIT=SYSDA
+//SYSUT2   DD SPACE=(CYL,(1,1)),UNIT=SYSDA
+//SYSPRINT DD SYSOUT=*
+**************************** Bottom of Data ****************************

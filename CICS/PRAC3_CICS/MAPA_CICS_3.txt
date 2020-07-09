@@ -1,0 +1,19 @@
+MAPSET   DFHMSD TYPE=DSECT,MODE=INOUT,TERM=ALL,STORAGE=AUTO,           X
+               LANG=COBOL
+MAPA3    DFHMDI SIZE=(24,80),LINE=1,COLUMN=1,CTRL=FREEKB
+         DFHMDF POS=(2,1),LENGTH=17,INITIAL='TRANSACCION: TRA3',       X
+               ATTRB=(ASKIP,NORM)
+         DFHMDF POS=(2,30),LENGTH=16,INITIAL='ES ANIO BISIESTO',       X
+               ATTRB=(ASKIP,NORM)
+         DFHMDF POS=(6,12),LENGTH=15,INITIAL='TECLEE EL ANIO ',        X
+               ATTRB=(ASKIP,NORM)
+         DFHMDF POS=(6,28),LENGTH=18,INITIAL='Y PRESIONE ENTER: ',     X
+               ATTRB=(ASKIP,NORM,PROT)
+ANIO     DFHMDF POS=(6,47),LENGTH=4,INITIAL='____',                    X
+               ATTRB=(UNPROT,NORM,IC)
+         DFHMDF POS=(6,52),LENGTH=1,INITIAL=' ',                       X
+               ATTRB=(PROT)
+MSG      DFHMDF POS=(11,15),LENGTH=40,                                 X
+               ATTRB=(ASKIP,PROT)
+         DFHMSD TYPE=FINAL
+         END

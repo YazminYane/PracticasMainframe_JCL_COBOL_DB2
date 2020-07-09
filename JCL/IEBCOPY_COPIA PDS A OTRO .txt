@@ -1,0 +1,25 @@
+//IEBCOPY JOB CLASS=A,MSGCLASS=A,MSGLEVEL=(1,1),NOTIFY=&SYSUID,
+//            PRTY=15
+//*--------------------------------------------------------------
+//*  COPEA EL CONTENIDO DE UNA LIBRERIA EN OTRA
+//*--------------------------------------------------------------
+//PASO1    EXEC PGM=IEBCOPY
+//DD1      DD   DSN=ACADEMIA.COBOL.MAPAS,DISP=SHR
+//DD2      DD   DSN=ACADEMIA.COBOL.COPIA,DISP=SHR
+//SYSPRINT DD   SYSOUT=*
+//SYSOUT   DD   SYSOUT=*
+//SYSIN    DD   *
+            COPY OUTDD=DD2
+                  INDD=DD1
+/*
+//*--------------------------------------------------------------
+//* ESTE PASO HACE LO MISMO QUE EL PASO1
+//* NO FUNCIONO
+//*--------------------------------------------------------------
+//PASO2    EXEC PGM=IEBCOPY
+//SYSUT1   DD   DSN=ACADEMIA.COBOL.COPYS,DISP=SHR
+//SYSUT2   DD   DSN=ACADEMIA.COBOL.COPIA2,DISP=SHR
+//SYSPRINT DD   SYSOUT=*
+//SYSOUT   DD   SYSOUT=*
+//SYSIN    DD   DUMMY
+/*

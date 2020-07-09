@@ -1,0 +1,12 @@
+//DELPS JOB CLASS=A,PRTY=15,MSGCLASS=A,MSGLEVEL=(1,1),                  00010000
+//          NOTIFY=&SYSUID                                              00020000
+//*--------------------------------------------------------------       00030000
+//*             ELIMINA UN MEMBER DE UN PDS                             00040001
+//*--------------------------------------------------------------       00050000
+//PASO1  EXEC PGM=IDCAMS                                                00060001
+//DD1    DD   DSN=ACADEMIA.COBOL.PDS,                                   00070001
+//            DISP=SHR                                                  00080001
+//SYSPRINT DD SYSOUT=*                                                  00081001
+//SYSIN   DD  * /* INDICA SI SE DESEA PASAR UN VALOR AL PROGRAMA        00082001
+          DELETE 'ACADEMIA.COBOL.PDS(MEMBER1)' FILE(DD1)                00083001
+/*                                                                      00090000

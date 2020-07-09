@@ -1,0 +1,18 @@
+//OUTREC2 JOB CLASS=A,MSGCLASS=A,MSGLEVEL=(1,1),NOTIFY=&SYSUID,
+//            PRTY=15
+//*----------------------------------------------------------------
+//*          USO DE LA INSTRUCCION OUTREC FINDREP
+//*   SE USA PARA PONER REMPLAZAR PALABRAS EN TODO EL SECUENCIAL
+//*----------------------------------------------------------------
+//PASO1   EXEC PGM=SORT
+//SORTIN  DD   DSN=ACADEMIA.COBOL.DATOS,DISP=SHR
+//SORTOUT DD   DSN=ACADEMIA.COBOL.DATOS4,
+//             DISP=(NEW,CATLG,DELETE),
+//             SPACE=(CYL,(20,20),RLSE),
+//             DCB=(DSORG=PS,RECFM=FB,LRECL=200)
+//SYSPRINT DD  SYSOUT=*
+//SYSOUT   DD  SYSOUT=*
+//SYSIN    DD  *
+               OPTION COPY
+               OUTREC FINDREP=(IN=C'BURGOS',OUT=C'NACIONAL')
+/*

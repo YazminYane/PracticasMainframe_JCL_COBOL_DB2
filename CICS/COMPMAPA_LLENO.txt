@@ -1,0 +1,65 @@
+//IBMUSERM JOB (ZIP),'ENSAMBLA MAPA',MSGLEVEL=(1,1),MSGCLASS=A,
+//         REGION=0M,CLASS=A,NOTIFY=&SYSUID
+//*
+//**********************************************************************
+//*
+//* EL COPY DE DICHO MAPA SE GENERA EN LA BIBLITOCA CPY(mapa simbolico)
+//*
+//**********************************************************************
+//* PASO : PSCH0010
+//* PROGRAMA : ASMA90
+//* FUNCION : VALIDA ARQUITECTURA DEL MAPA Y GENERA EL COPY
+//**********************************************************************
+//*
+//PSCH0010 EXEC PGM=ASMA90,
+//       PARM='DECK,NOOBJECT,LIST,XREF(FULL),ALIGN,SYSPARM(DSECT)'
+//SYSLIB DD DSN=DFH320.CICS.SDFHMAC,DISP=SHR
+//       DD DSN=SYS1.MACLIB,DISP=SHR
+//       DD DSN=SYS1.MODGEN,DISP=SHR
+//SYSUT1 DD UNIT=SYSDA,SPACE=(TRK,(10,1),RLSE)
+//SYSUT2 DD UNIT=SYSDA,SPACE=(TRK,(10,1),RLSE)
+//SYSUT3 DD UNIT=SYSDA,SPACE=(TRK,(10,1),RLSE)
+//SYSPRINT DD SYSOUT=*
+//SYSIN DD DSN=ACADEMIA.COBOL.MAPAS(MAPA4),DISP=SHR
+//SYSPUNCH DD DSN=ACADEMIA.COBOL.COPYS(MAPCIC4),DISP=SHR mapa simbolico
+//*
+//**********************************************************************
+//* PASO : PSCH0020
+//* PROGRAMA : ASMA90
+//* FUNCION : ENSAMBLA MAPA PARA GENERAR EL MODULO DE CARGA
+//**********************************************************************
+//*
+//PSCH0020 EXEC PGM=ASMA90,COND=(4,LT,PSCH0010),
+//        PARM='DECK,NOOBJECT,LIST,XREF(FULL),ALIGN,SYSPARM(MAP)'
+//SYSLIB DD DSN=DFH320.CICS.SDFHMAC,DISP=SHR
+//       DD DSN=SYS1.MACLIB,DISP=SHR
+//       DD DSN=SYS1.MODGEN,DISP=SHR
+//SYSUT1 DD UNIT=SYSDA,SPACE=(TRK,(10,1),RLSE)
+//SYSUT2 DD UNIT=SYSDA,SPACE=(TRK,(10,1),RLSE)
+//SYSUT3 DD UNIT=SYSDA,SPACE=(TRK,(10,1),RLSE)
+//SYSPRINT DD SYSOUT=*
+//SYSIN DD DSN=ACADEMIA.COBOL.MAPAS(MAPA4),DISP=SHR
+//SYSPUNCH DD DSN=&&MAPA,DISP=(NEW,PASS,DELETE),
+//       DCB=(RECFM=FB,LRECL=80,BLKSIZE=400),UNIT=3390,
+//       SPACE=(TRK,(10,1),RLSE)
+//SYSLIN DD DUMMY
+//*
+//**********************************************************************
+//* PASO : PSCH0030
+//* PROGRAMA : IEWL
+//* FUNCION : VALIDA Y GENERA EL MODULO DE CARGA PARA CICSLIB
+//**********************************************************************
+//*
+//PSCH0030 EXEC PGM=IEWL,COND=(4,LT,PSCH0020),
+//        PARM='LET,LIST,SIZE=(512K,128K)'
+//SYSLMOD DD DSN=DFH320.CICS.SDFHLOAD(MAPA4),
+// DISP=SHR
+//SYSLIN DD DSN=&&MAPA,DISP=(OLD,DELETE)
+//*DD *
+//*NAME TMAP01(R)
+//SYSUT1 DD UNIT=SYSDA,SPACE=(TRK,(10,1),RLSE)
+//SYSPRINT DD SYSOUT=*
+//*
+//**********************************************************************
+//* FINALIZA PROCESO
+//**********************************************************************

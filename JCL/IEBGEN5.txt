@@ -1,0 +1,15 @@
+//IEBGEN5 JOB CLASS=A,MSGCLASS=A,MSGLEVEL=(1,1),NOTIFY=&SYSUID,         00010000
+//            PRTY=15                                                   00020000
+//*----------------------------------------------------------------     00030000
+//*   GENERAR UN PDS MEMBER MIENTRAS SE COPIA                           00040000
+//* NO FUNCIONO                                                         00050000
+//*----------------------------------------------------------------     00060000
+//PASO1    EXEC  PGM=IEBGENER                                           00070000
+//SYSUT1   DD    DSN=ACADEMIA.COBOL.PS,DISP=SHR                         00080000
+//SYSUT2   DD    DSN=ACADEMIA.COBOL.PDS,DISP=SHR                        00090000
+//SYSPRINT DD    SYSOUT=*                                               00100000
+//SYSOUT   DD    SYSOUT=*                                               00110000
+//SYSIN    DD    *                                                      00120000
+           GENERATE MAXNAME=1     <-- DEPENDE DEL NUMERO CREADO         00121000
+           MEMBER NAME=MEMBER1                                          00122000
+/*                                                                      00130000

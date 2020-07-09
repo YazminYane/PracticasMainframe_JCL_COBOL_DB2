@@ -1,0 +1,24 @@
+      **========================================================
+      ** RUTINA PARA UNIR EL NOMBRE
+      **========================================================
+       IDENTIFICATION DIVISION.
+      ***********************************************************
+       PROGRAM-ID. NOMBRE.
+       ENVIRONMENT DIVISION.
+       DATA DIVISION.
+       LINKAGE SECTION.
+       01 PARAMETROS.
+          05 IN-NOMBRE PIC X(20).
+          05 APPATERNO PIC X(20).
+          05 APMATERNO PIC X(20).
+          05 NOMCOMP   PIC X(60).
+       PROCEDURE DIVISION USING PARAMETROS.
+                MOVE SPACES TO NOMCOMP
+                STRING IN-NOMBRE DELIMITED BY '  '
+                            ' ' DELIMITED BY SIZE
+                       APPATERNO DELIMITED BY '  '
+                            ' ' DELIMITED BY SIZE
+                       APMATERNO DELIMITED BY '  '
+               INTO NOMCOMP
+               END-STRING
+            GOBACK.

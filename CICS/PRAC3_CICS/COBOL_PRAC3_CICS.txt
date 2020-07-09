@@ -1,0 +1,87 @@
+      *==========================================================
+      *INDICA SI EL ANIO ES BISIESTO EN CICS.
+      *==========================================================
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. PRAC3.
+       ENVIRONMENT DIVISION.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+      *==========================================================
+       COPY COPMAP3.
+       01 OPERACIONES.
+         10 ANIO     PIC 9(4).
+         10 RES      PIC 9(5).
+         10 RES400   PIC 9(3).
+         10 RES4     PIC 9(3).
+         10 RES100   PIC 9(3).
+       01 MSG        PIC X(40).
+
+       PROCEDURE DIVISION.
+      *==========================================================
+       000-PRINCIPAL.
+           PERFORM 100-MOSTRAR-MAPA
+           PERFORM 200-RECIBIR-DATO
+           PERFORM 300-ENVIAR-DATOS
+           PERFORM 600-FIN.
+      *
+      *==========================================================
+       100-MOSTRAR-MAPA.
+           INITIALIZE MAPA3I.
+           INITIALIZE MAPA3O.
+           INITIALIZE RES.
+           INITIALIZE RES400.
+           INITIALIZE RES4.
+           INITIALIZE RES100.
+           EXEC CICS SEND
+                   MAP('MAPA3')
+                   MAPONLY
+                   ERASE
+                   NOHANDLE
+           END-EXEC.
+      *==========================================================
+       200-RECIBIR-DATO.
+           EXEC CICS RECEIVE
+                   MAP('MAPA3')
+                   INTO(MAPA3I)
+           END-EXEC
+           MOVE ANIOI TO ANIO
+           PERFORM 500-VALIDACIONES.
+
+      *==========================================================
+       300-ENVIAR-DATOS.
+           EXEC CICS SEND
+                   MAP('MAPA3')
+                   FROM(MAPA3O)
+           END-EXEC.
+      *==========================================================
+       400-ES-BISIESTO.
+           DIVIDE ANIO BY 4   GIVING RES REMAINDER RES4
+           DIVIDE ANIO BY 400 GIVING RES REMAINDER RES400
+           DIVIDE ANIO BY 100 GIVING RES REMAINDER RES100
+      *
+           IF RES400 = 0
+                 MOVE 'SI ES ANIO BISIETO' TO MSGO
+           ELSE IF RES4 = 0 AND RES100 NOT = 0
+                  MOVE 'SI ES ANIO BISIETO' TO MSGO
+                ELSE
+                  MOVE 'NO ES ANIO BISIETO' TO MSGO
+                END-IF
+           END-IF
+           MOVE ANIO TO ANIOO.
+      *========================================================
+       500-VALIDACIONES.
+           IF ANIO = SPACES OR LOW-VALUES
+               MOVE 'INGRESE UNA FECHA' TO MSGO
+               PERFORM 300-ENVIAR-DATOS
+           ELSE IF ANIO IS NOT NUMERIC
+                    MOVE 'INGRESE UN VALOR NUMERICO' TO MSGO
+                    PERFORM 300-ENVIAR-DATOS
+                ELSE
+                    PERFORM 400-ES-BISIESTO
+                END-IF
+           END-IF.
+      *========================================================
+       600-FIN.
+           EXEC CICS
+                RETURN TRANSID('TRA3')
+           END-EXEC.

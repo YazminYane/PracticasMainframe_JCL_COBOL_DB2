@@ -1,0 +1,13 @@
+//JOINKEY  JOB 1,NOTIFY=&SYSUID                                         00010000
+//STEP1    EXEC PGM=SORT                                                00020000
+//DD1      DD   DSN=ACADEMIA.COBOL.FILE1,DISP=SHR                       00030000
+//DD2      DD   DSN=ACADEMIA.COBOL.FILE2,DISP=SHR                       00040000
+//SORTOUT  DD   DSN=ACADEMIA.COBOL.FILE3,DISP=SHR                       00041000
+//SYSPRINT DD SYSOUT=*                                                  00060000
+//SYSOUT   DD SYSOUT=*                                                  00070000
+//SYSIN    DD *                                                         00080000
+           SORT FIELDS=COPY                                             00081000
+           JOINKEYS F1=DD1,FIELDS=(2,10,A)                              00082000
+           JOINKEYS F2=DD2,FIELDS=(2,10,A)                              00083000
+           REFORMAT FIELDS=(F1:1,10,F2:1,10)                            00084000
+/*                                                                      00090000

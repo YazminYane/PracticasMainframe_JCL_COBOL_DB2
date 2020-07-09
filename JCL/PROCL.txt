@@ -1,0 +1,10 @@
+//PROCL JOB CLASS=A,NOTIFY=&SYSUID,MSGLEVEL=(1,1),MSGCLASS=A,           00010000
+//          PRTY=15                                                     00011000
+//*---------------------------------------------------------------      00020000
+//*   LLAMA AUN PROCEDIMIENTO UBICADO EN OTRO JCL                       00030000
+//*---------------------------------------------------------------      00040000
+//BUSCAR JCLLIB ORDER=ACADEMIA.COBOL.CURSOJCL                           00070000
+//*                                                                     00080000
+//PASO2 EXEC CREAR,NOMBRE=ACADEMIA.COBOL.PS5                            00150000
+//PASO3 EXEC CREAR,NOMBRE=ACADEMIA.COBOL.PS6                            00160000
+/*                                                                      00170000

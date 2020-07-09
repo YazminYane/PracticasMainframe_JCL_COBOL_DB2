@@ -1,0 +1,26 @@
+//COPIAR JOB CLASS=A,MSGCLASS=A,NOTIFY=&SYSUID,MSGLEVEL=(1,1),
+//           PRTY=15
+//*--------------------------------------------------------------
+//*  REPARTE LOS REGISTROS DEL ARCHIVO DE ENTRADA EN LOS 3 DE
+//*SALIDA REPARTE UNO EN DATSO7, OTRO EN DATSO8 Y OTRO EN DATSO9
+//*--------------------------------------------------------------
+//PASO1     EXEC PGM=SORT
+//SORTIN    DD DSN=ACADEMIA.COBOL.DATOS,DISP=SHR
+//SORTOF1   DD DSN=ACADEMIA.COBOL.DATSO7,
+//             DISP=(NEW,CATLG,DELETE),
+//             SPACE=(TRK,(10,5),RLSE),
+//             DCB=(LRECL=113,RECFM=FB,DSORG=PS)
+//SORTOF2   DD DSN=ACADEMIA.COBOL.DATSO8,
+//             DISP=(NEW,CATLG,DELETE),
+//             SPACE=(TRK,(10,5),RLSE),
+//             DCB=(LRECL=113,RECFM=FB,DSORG=PS)
+//SORTOF3   DD DSN=ACADEMIA.COBOL.DATSO9,
+//             DISP=(NEW,CATLG,DELETE),
+//             SPACE=(TRK,(10,5),RLSE),
+//             DCB=(LRECL=113,RECFM=FB,DSORG=PS)
+//SYSPRINT DD SYSOUT=*
+//SYSOUT   DD SYSOUT=*
+//SYSIN    DD *
+            OPTION COPY
+            OUTFIL FILES=(1,2,3),SPLIT
+/*

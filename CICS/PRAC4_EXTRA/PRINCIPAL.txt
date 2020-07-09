@@ -1,0 +1,212 @@
+      *=====================================================
+      *  PROGRAMA QUE MANDA A LLAMAR RUTINAS PARA DAR
+      *   MANTENIMIENTO A UNA DB2 DE EMPLEADOS
+      *=====================================================
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. PRAC04.
+       ENVIRONMENT DIVISION.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+      *=====================================================
+            COPY MAPCIC4.
+      *=====================================================
+       01 DATOSALTA.
+         05 RA-EPNO      PIC X(6).
+         05 RA-WORKDEPT  PIC X(3).
+         05 RA-NOMBRE    PIC X(20).
+         05 RA-APATERNO  PIC X(20).
+         05 RA-AMATERNO  PIC X(20).
+         05 RA-PHONENO   PIC X(10).
+         05 RA-DIRECCION PIC X(30).
+         05 RA-SEX       PIC X(1).
+         05 RA-BIRTHDATE PIC X(10).
+         05 RA-PUESTO    PIC X(15).
+         05 RA-SALARY    PIC X(13).
+         05 RA-BONUS     PIC X(13).
+         05 RA-COMM      PIC X(13).
+         05 RA-MSG       PIC X(40).
+      *=====================================================
+       01 DATOSBAJA.
+         05 RB-EPNO      PIC X(6).
+         05 RB-MSG       PIC X(40).
+      *=====================================================
+       01 DATOSMODIFICAR.
+         05 RM-EPNO     PIC X(6).
+         05 RM-WORKDEPT  PIC X(3).
+         05 RM-PHONENO   PIC X(10).
+         05 RM-DIRECCION PIC X(30).
+         05 RM-PUESTO    PIC X(15).
+         05 RM-SALARY    PIC X(13).
+         05 RM-BONUS     PIC X(13).
+         05 RM-COMM      PIC X(13).
+         05 RM-MSG       PIC X(40).
+      *=====================================================
+       01 DATOSCONSULTA.
+         05 RC-EPNO          PIC X(6).
+         05 TEMP-NOMBRE-COM  PIC X(40).
+         05 RC-WORKDEPT      PIC X(3).
+         05 RC-PUESTO        PIC X(15).
+         05 RC-SALARY        PIC $99999.99.
+         05 RC-MSG           PIC X(40).
+      *=====================================================
+       PROCEDURE DIVISION.
+       000-PRINCIPAL.
+           PERFORM 001-MOSTRAR-MAPA
+           PERFORM 002-RECIBIR-VALIDAR-OPCION
+           PERFORM 012-FIN.
+      *=====================================================
+       001-MOSTRAR-MAPA.
+            INITIALIZE MAPA4O
+            INITIALIZE MAPA4I
+            EXEC CICS SEND
+                    MAP('MAPA4')
+                    ERASE
+            END-EXEC.
+      *=====================================================
+       002-RECIBIR-VALIDAR-OPCION.
+           EXEC CICS RECEIVE
+                   MAP('MAPA4')
+                   INTO(MAPA4I)
+           END-EXEC
+           EVALUATE TRUE
+              WHEN OPCIONI = 'A'
+                  PERFORM 007-ENVIAR-MAPA-DATOS
+                  PERFORM 002-RECIBIR-DATO
+                  PERFORM 006-VALIDACIONES
+                  PERFORM 007-ENVIAR-MAPA-DATOS
+              WHEN OPCIONI = 'B'
+                  PERFORM 007-ENVIAR-MAPA-DATOS
+                  PERFORM 002-RECIBIR-DATO
+                  PERFORM 006-VALIDACIONES
+                  PERFORM 007-ENVIAR-MAPA-DATOS
+              WHEN OPCIONI = 'M'
+                  PERFORM 007-ENVIAR-MAPA-DATOS
+                  PERFORM 002-RECIBIR-DATO
+                  PERFORM 006-VALIDACIONES
+                  PERFORM 007-ENVIAR-MAPA-DATOS
+              WHEN OPCIONI = 'C'
+                  PERFORM 007-ENVIAR-MAPA-DATOS
+                  PERFORM 002-RECIBIR-DATO
+                  PERFORM 006-VALIDACIONES
+                  PERFORM 007-ENVIAR-MAPA-DATOS
+              WHEN OTHER
+                  MOVE 'INGRESA UN VALOR VALIDO' TO MSGO
+                  PERFORM 007-ENVIAR-MAPA-DATOS
+           END-EVALUATE.
+      *=====================================================
+       002-RECIBIR-DATO.
+            EXEC CICS RECEIVE
+                    MAP('MAPA4')
+                    INTO(MAPA4I)
+            END-EXEC.
+      *=====================================================
+       006-VALIDACIONES.
+           IF NUMEMPI = SPACES OR LOW-VALUES
+                MOVE 'INGRESE UN NUMERO DE EMPLEADO' TO MSGO
+                PERFORM 007-ENVIAR-MAPA-DATOS
+           ELSE IF NUMEMPI IS NOT NUMERIC
+                   MOVE 'INGRESE UN VALOR NUMERICO' TO MSGO
+                   PERFORM 007-ENVIAR-MAPA-DATOS
+                ELSE
+                   EVALUATE TRUE
+                       WHEN OPCIONI = 'A'
+                            PERFORM 008-LLAMAR-ALTA
+                       WHEN OPCIONI = 'B'
+                            PERFORM 009-LLAMAR-BAJA
+                       WHEN OPCIONI = 'M'
+                            PERFORM 010-LLAMAR-MODIFICAR
+                       WHEN OPCIONI = 'C'
+                            PERFORM 011-LLAMAR-CONSULTA
+                   END-EVALUATE
+                END-IF
+           END-IF.
+      *=====================================================
+       007-ENVIAR-MAPA-DATOS.
+             EXEC CICS SEND
+                  MAP('MAPA4')
+                  FROM(MAPA4O)
+             END-EXEC.
+      *=====================================================
+       008-LLAMAR-ALTA.
+           MOVE NUMEMPI TO RA-EPNO
+           MOVE DEPARTI TO RA-WORKDEPT
+           MOVE NOMI TO RA-NOMBRE
+           MOVE APATI TO RA-APATERNO
+           MOVE AMATI TO RA-AMATERNO
+           MOVE TELI TO RA-PHONENO
+           MOVE DIRAI TO RA-DIRECCION
+           MOVE SEXOI TO RA-SEX
+           MOVE FNACI TO RA-BIRTHDATE
+           MOVE PUESTOI TO RA-PUESTO
+           MOVE SALARIOI TO RA-SALARY
+           MOVE BONOI TO RA-BONUS
+           MOVE COMI TO RA-COMM
+           MOVE MSGI TO RA-MSG
+           EXEC CICS LINK
+                PROGRAM('RUTINAAL')
+                COMMAREA(DATOSALTA)
+           END-EXEC
+           MOVE RA-EPNO TO NUMEMPO
+           MOVE RA-WORKDEPT TO DEPARTO
+           MOVE RA-NOMBRE TO NOMO
+           MOVE RA-APATERNO TO APATO
+           MOVE RA-AMATERNO TO AMATO
+           MOVE RA-PHONENO TO TELO
+           MOVE RA-DIRECCION TO DIRAO
+           MOVE RA-SEX TO SEXOO
+           MOVE RA-BIRTHDATE TO FNACO
+           MOVE RA-PUESTO TO PUESTOO
+           MOVE RA-SALARY TO SALARIOO
+           MOVE RA-BONUS TO BONOO
+           MOVE RA-COMM TO COMO
+           MOVE RA-MSG TO MSGO.
+      *=====================================================
+       009-LLAMAR-BAJA.
+           MOVE NUMEMPI TO RB-EPNO
+           EXEC CICS LINK
+                PROGRAM('RUTINABA')
+                COMMAREA(DATOSBAJA)
+           END-EXEC
+           MOVE RB-EPNO TO NUMEMPO
+           MOVE RB-MSG TO MSGO.
+      *=====================================================
+       010-LLAMAR-MODIFICAR.
+           MOVE NUMEMPI TO RM-EPNO
+           MOVE DEPARTI TO RM-WORKDEPT
+           MOVE TELI TO RM-PHONENO
+           MOVE DIRAI TO RM-DIRECCION
+           MOVE PUESTOI TO RM-PUESTO
+           MOVE SALARIOI TO RM-SALARY
+           MOVE BONOI TO RM-BONUS
+           MOVE COMI TO RM-COMM
+           MOVE MSGI TO RM-MSG
+           EXEC CICS LINK
+                PROGRAM('RUTINAMO')
+                COMMAREA(DATOSMODIFICAR)
+           END-EXEC
+           MOVE RM-EPNO TO NUMEMPO
+           MOVE RM-WORKDEPT TO DEPARTO
+           MOVE RM-PHONENO TO TELO
+           MOVE RM-DIRECCION TO DIRAO
+           MOVE RM-PUESTO TO PUESTOO
+           MOVE RM-SALARY TO SALARIOO
+           MOVE RM-BONUS TO BONOO
+           MOVE RM-COMM TO COMO
+           MOVE RM-MSG TO MSGO.
+      *=====================================================
+       011-LLAMAR-CONSULTA.
+           MOVE NUMEMPI TO RC-EPNO
+           EXEC CICS LINK
+                PROGRAM('RUTINACO')
+                COMMAREA(DATOSCONSULTA)
+           END-EXEC
+           MOVE TEMP-NOMBRE-COM TO NOMBREO
+           MOVE RC-WORKDEPT TO DEPARTO
+           MOVE RC-PUESTO TO PUESTOO
+           MOVE RC-SALARY TO SALARIOO
+           MOVE RC-MSG TO MSGO.
+      *=====================================================
+       012-FIN.
+            EXEC CICS RETURN
+                 TRANSID('MAP4')
+            END-EXEC.

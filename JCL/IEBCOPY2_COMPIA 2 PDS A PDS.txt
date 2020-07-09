@@ -1,0 +1,17 @@
+//IEBCOPY2 JOB CLASS=A,MSGCLASS=A,MSGLEVEL=(1,1),NOTIFY=&SYSUID,
+//             PRTY=15
+//*--------------------------------------------------------------
+//*  COPEA EL CONTENIDO DE 2 LIBRERIAS EN 1
+//* LAS LIBRERIAS DEBEN ESTAR CREADAS
+//*--------------------------------------------------------------
+//PASO1    EXEC PGM=IEBCOPY
+//DD1      DD   DSN=ACADEMIA.COBOL.COPYS,DISP=SHR   <-- INPUT DATASET
+//DD2      DD   DSN=ACADEMIA.COBOL.COSAS2,DISP=SHR  <-- INPUT DATASET
+//DD3      DD   DSN=ACADEMIA.COBOL.COPIA,DISP=SHR   <-- OUTPUT DATASET
+//SYSPRINT DD   SYSOUT=*
+//SYSOUT   DD   SYSOUT=*
+//SYSIN    DD   *
+            COPY OUTDD=DD3
+                  INDD=DD1
+                  INDD=DD2
+/*

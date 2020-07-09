@@ -1,0 +1,13 @@
+//UNCATALO JOB  CLASS=A,MSGCLASS=A,MSGLEVEL=(1,1),NOTIFI=&SYSUID
+//           PRTY=15
+//*---------------------------------------------------------------
+//*          DESCATALOGAR(ELIMINAR) UN DATASET
+//* NO PROBADO
+//*---------------------------------------------------------------
+//PASO1    EXEC PGM=IEHLIST
+//DD1      DD   UNIT=DISK,VOLUME=SER=PUB000,DISP=SHR
+//SYSPRINT DD   SYSOUT=*
+//SYSOUT   DD   SYSOUT=*
+//SYSIN    DD   *
+              UNCATLG DSNAME=ABHI.COURSE.PS1
+/*

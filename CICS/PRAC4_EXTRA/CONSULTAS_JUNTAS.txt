@@ -1,0 +1,247 @@
+      *=====================================================
+      *  PROGRAMA QUE DA MANTENIMIENO A LA TABLAS
+      *     REALIZA : ALTA, BAJA, CAMBIO Y MODIFICAR
+      *=====================================================
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. PRAC05.
+       ENVIRONMENT DIVISION.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 TEMP-NOMBRE-COM PIC X(40).
+       01 TEMP-SALARI1 PIC 9(11)V99.
+       01 TEMP-SALARIO PIC $99999.99.
+      *=====================================================
+            COPY MAPCIC4.
+      *=====================================================
+            EXEC SQL
+               INCLUDE DCLEMP
+            END-EXEC.
+      *=====================================================
+            EXEC SQL
+               INCLUDE SQLCA
+            END-EXEC.
+      *=====================================================
+       PROCEDURE DIVISION.
+       000-PRINCIPAL.
+           PERFORM 001-MOSTRAR-MAPA
+           PERFORM 002-RECIBIR-VALIDAR-OPCION
+           PERFORM 008-FIN.
+      *=====================================================
+       001-MOSTRAR-MAPA.
+            INITIALIZE MAPA4O
+            INITIALIZE MAPA4I
+            EXEC CICS SEND
+                    MAP('MAPA4')
+                    ERASE
+            END-EXEC.
+      *=====================================================
+       002-RECIBIR-VALIDAR-OPCION.
+           EXEC CICS RECEIVE
+                   MAP('MAPA4')
+                   INTO(MAPA4I)
+           END-EXEC
+           EVALUATE TRUE
+              WHEN OPCIONI = 'A'
+                  PERFORM 007-ENVIAR-MAPA-DATOS
+                  PERFORM 011-RECIBIR-DATO-ALTA
+                  PERFORM 007-ENVIAR-MAPA-DATOS
+              WHEN OPCIONI = 'B'
+                  PERFORM 007-ENVIAR-MAPA-DATOS
+                  PERFORM 012-RECIBIR-DATO-BAJA
+                  PERFORM 007-ENVIAR-MAPA-DATOS
+              WHEN OPCIONI = 'M'
+                  PERFORM 007-ENVIAR-MAPA-DATOS
+                  PERFORM 013-RECIBIR-DATO-ACTUALIZAR
+                  PERFORM 007-ENVIAR-MAPA-DATOS
+              WHEN OPCIONI = 'C'
+                  PERFORM 007-ENVIAR-MAPA-DATOS
+                  PERFORM 002-RECIBIR-DATO
+              WHEN OTHER
+                  MOVE 'INGRESA UN VALOR VALIDO' TO MSGO
+                  PERFORM 007-ENVIAR-MAPA-DATOS
+           END-EVALUATE.
+      *=====================================================
+       002-RECIBIR-DATO.
+            EXEC CICS RECEIVE
+                    MAP('MAPA4')
+                    INTO(MAPA4I)
+            END-EXEC
+            MOVE NUMEMPI TO H-EMPNO
+            PERFORM 003-SELECCIONAR-DATOS
+            PERFORM 006-VALIDACIONES.
+      *=====================================================
+      *      PASA EL DATO DEL COPY A LA VAR DEL DB2
+      *=====================================================
+       003-SELECCIONAR-DATOS.
+             EXEC SQL
+                SELECT
+                       NOMBRE,
+                       APATERNO,
+                       AMATERNO,
+                       WORKDEPT,
+                       PUESTO,
+                       SALARY
+                INTO
+                     :H-NOMBRE,
+                     :H-APATERNO,
+                     :H-AMATERNO,
+                     :H-WORKDEPT,
+                     :H-PUESTO,
+                     :H-SALARY
+                FROM INDRA.EMP
+                WHERE EMPNO = :H-EMPNO
+             END-EXEC.
+      *=====================================================
+       004-UNIR-NOMBRE.
+                MOVE SPACES TO TEMP-NOMBRE-COM
+                STRING H-NOMBRE DELIMITED BY '  '
+                             ' ' DELIMITED BY SIZE
+                       H-APATERNO DELIMITED BY '  '
+                             ' ' DELIMITED BY SIZE
+                       H-AMATERNO DELIMITED BY '  '
+                INTO TEMP-NOMBRE-COM
+                END-STRING
+                MOVE TEMP-NOMBRE-COM TO NOMBREO.
+      *=====================================================
+      *    PASA LAS VAR DE HOST A LAS VAR DEL MAP DE SAL
+      *=====================================================
+       005-VALIDAR-CODIGO-SQL.
+             IF SQLCODE = 0
+                 PERFORM 004-UNIR-NOMBRE
+                 MOVE H-SALARY TO TEMP-SALARI1
+                 MOVE TEMP-SALARI1 TO TEMP-SALARIO
+                 MOVE H-WORKDEPT TO DEPARTO
+                 MOVE H-PUESTO TO PUESTOO
+                 MOVE TEMP-SALARIO TO SALARIOO
+                 MOVE 'REGISTRO ENCONTRADO' TO MSGO
+                 PERFORM 007-ENVIAR-MAPA-DATOS
+              ELSE
+                 MOVE 'REGISTRO NO ENCONTRADO' TO MSGO
+                 PERFORM 007-ENVIAR-MAPA-DATOS
+             END-IF.
+      *=====================================================
+       006-VALIDACIONES.
+           IF H-EMPNO = SPACES OR LOW-VALUES
+                MOVE 'INGRESE UN NUMERO DE EMPLEADO' TO MSGO
+                PERFORM 007-ENVIAR-MAPA-DATOS
+           ELSE IF H-EMPNO IS NOT NUMERIC
+                   MOVE 'INGRESE UN VALOR NUMERICO' TO MSGO
+                   PERFORM 007-ENVIAR-MAPA-DATOS
+                ELSE
+                   PERFORM 005-VALIDAR-CODIGO-SQL
+                END-IF
+           END-IF.
+      *=====================================================
+       007-ENVIAR-MAPA-DATOS.
+             EXEC CICS SEND
+                  MAP('MAPA4')
+                  FROM(MAPA4O)
+             END-EXEC.
+      *=====================================================
+       008-FIN.
+            EXEC CICS RETURN
+                 TRANSID('MAP5')
+            END-EXEC.
+      *=====================================================
+       011-RECIBIR-DATO-ALTA.
+            EXEC CICS RECEIVE
+                    MAP('MAPA4')
+                    INTO(MAPA4I)
+            END-EXEC
+      *-----------------------------------------------------
+            MOVE NUMEMPI TO H-EMPNO
+            MOVE DEPARTI TO H-WORKDEPT
+            MOVE NOMI TO H-NOMBRE
+            MOVE APATI TO H-APATERNO
+            MOVE AMATI TO H-AMATERNO
+            MOVE TELI TO H-PHONENO
+            MOVE DIRAI TO H-DIRECCION
+            MOVE SEXOI TO H-SEX
+            MOVE FNACI TO H-BIRTHDATE
+            MOVE PUESTOI TO H-PUESTO
+            COMPUTE H-SALARY = FUNCTION NUMVAL (SALARIOI)
+            COMPUTE H-BONUS = FUNCTION NUMVAL (BONOI)
+            COMPUTE H-COMM = FUNCTION NUMVAL (COMI)
+      *-----------------------------------------------------
+            EXEC SQL
+                INSERT INTO INDRA.EMP
+                      (EMPNO,
+                       WORKDEPT,
+                       NOMBRE,
+                       APATERNO,
+                       AMATERNO,
+                       PHONENO,
+                       DIRECCION,
+                       SEX,
+                       BIRTHDATE,
+                       PUESTO,
+                       SALARY,
+                       BONUS,
+                       COMM
+                 )VALUES(
+                       :H-EMPNO,
+                       :H-WORKDEPT,
+                       :H-NOMBRE,
+                       :H-APATERNO,
+                       :H-AMATERNO,
+                       :H-PHONENO,
+                       :H-DIRECCION,
+                       :H-SEX,
+                       :H-BIRTHDATE,
+                       :H-PUESTO,
+                       :H-SALARY,
+                       :H-BONUS,
+                       :H-COMM
+                        )
+            END-EXEC
+            IF SQLCODE = 0 OR SQLCODE = -803
+                 MOVE 'ALTA EXITOSA' TO MSGO
+            ELSE
+                 MOVE 'VUELVA A INTRODUCIR LOS DATOS' TO MSGO
+            END-IF.
+      *=====================================================
+       012-RECIBIR-DATO-BAJA.
+            EXEC CICS RECEIVE
+                    MAP('MAPA4')
+                    INTO(MAPA4I)
+            END-EXEC
+            MOVE NUMEMPI TO H-EMPNO
+            EXEC SQL
+                 DELETE FROM INDRA.EMP
+                 WHERE EMPNO = :H-EMPNO
+            END-EXEC.
+            IF SQLCODE = 0
+                 MOVE 'BAJA EXITOSA' TO MSGO
+            ELSE
+                 MOVE 'CORROBORE LA INFORMACION PROPORCIONADA' TO MSGO
+            END-IF.
+      *=====================================================
+       013-RECIBIR-DATO-ACTUALIZAR.
+            EXEC CICS RECEIVE
+                    MAP('MAPA4')
+                    INTO(MAPA4I)
+            END-EXEC
+            MOVE NUMEMPI TO H-EMPNO
+            MOVE DEPARTI TO H-WORKDEPT
+            MOVE TELI TO H-PHONENO
+            MOVE DIRAI TO H-DIRECCION
+            MOVE PUESTOI TO H-PUESTO
+            COMPUTE H-SALARY = FUNCTION NUMVAL (SALARIOI)
+            COMPUTE H-BONUS = FUNCTION NUMVAL (BONOI)
+            COMPUTE H-COMM = FUNCTION NUMVAL (COMI)
+            EXEC SQL
+                 UPDATE INDRA.EMP
+                 SET WORKDEPT = :H-WORKDEPT,
+                     PHONENO = :H-PHONENO,
+                     DIRECCION = :H-DIRECCION,
+                     PUESTO = :H-PUESTO,
+                     SALARY = :H-SALARY,
+                     BONUS = :H-BONUS,
+                     COMM = :H-COMM
+                 WHERE EMPNO = :H-EMPNO
+            END-EXEC.
+            IF SQLCODE = 0
+                 MOVE 'MODIFICAION EXITOSA' TO MSGO
+            ELSE
+                 MOVE 'CORROBORE LA INFORMACION PROPORCIONADA' TO MSGO
+            END-IF.

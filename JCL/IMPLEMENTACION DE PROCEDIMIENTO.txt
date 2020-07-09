@@ -1,0 +1,10 @@
+//CREAR PROC
+//PASO1 EXEC PGM=IEFBR14
+//DD1     DD DSN=&NOMBRE,
+//           DISP=(NEW,CATLG,DELETE),
+//           SPACE=(TRK,(10,5),RLSE),
+//           DCB=(LRECL=80,RECFM=FB,DSORG=PS)
+//      PEND
+//*---------------------------------------------------------------
+//*   IMPLEMENTACION DE UN PROCEDIMIENTO
+//*---------------------------------------------------------------

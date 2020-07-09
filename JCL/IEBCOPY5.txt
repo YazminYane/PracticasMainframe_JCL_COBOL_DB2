@@ -1,0 +1,14 @@
+//IEBCOPY5 JOB CLASS=A,MSGCLASS=A,MSGLEVEL=(1,1),NOTIFY=&SYSUID,
+//             PRTY=15
+//*--------------------------------------------------------------
+//*                   COMPRIMIR UN PDS
+//*          LAS LIBRERIAS DEBEN ESTAR CREADAS
+//*--------------------------------------------------------------
+//PASO1    EXEC PGM=IEBCOPY
+//DD1      DD   DSN=ACADEMIA.COBOL.COPIA,DISP=SHR <--DATASET TO COMPESS
+//SYSPRINT DD   SYSOUT=*
+//SYSOUT   DD   SYSOUT=*
+//SYSIN    DD   *
+            COPY OUTDD=DD1
+                  INDD=DD1
+/*

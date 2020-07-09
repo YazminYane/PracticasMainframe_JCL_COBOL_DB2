@@ -1,0 +1,124 @@
+      ******************* IDENTIFICATION DIVISION *****************
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. ORDENA11.
+      ********************* ENVIROMENT DIVISION *******************
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT DATOSSAL
+              ASSIGN TO DATOSSAL
+              ORGANIZATION IS SEQUENTIAL
+              FILE STATUS IS FS-DATOSSAL.
+      ***********************************************************
+       DATA DIVISION.
+       FILE SECTION.
+      ************************* ARCHIVOS ***************************
+       FD DATOSSAL
+           RECORDING MODE IS F
+           LABEL RECORDS ARE STANDARD
+           BLOCK CONTAINS 0 RECORDS
+           RECORD CONTAINS 100 CHARACTERS
+           DATA RECORD IS DATOSSAL2.
+       01 DATOSSAL2 PIC X(100).
+      ****************  WORKING-STORE SECTION *********************
+       WORKING-STORAGE SECTION.
+       01 DATOSSAL1.
+           10 OUT-MOV-ENTIOFI     PIC X(8).
+           10 FILLER PIC X(1)     VALUE SPACES.
+           10 OUT-MOV-CUENTA      PIC X(10).
+           10 FILLER PIC X(1)     VALUE SPACES.
+           10 OUT-MOV-CUENTA-PAG  PIC X(10).
+           10 FILLER PIC X(1)     VALUE SPACES.
+           10 OUT-MOV-FEOPER      PIC X(10).
+           10 FILLER PIC X(1)     VALUE SPACES.
+           10 OUT-MOV-IMPMOV      PIC 9(16)V99.
+           10 FILLER PIC X(1)     VALUE SPACES.
+           10 OUT-MOV-CLACON      PIC X(2).
+           10 FILLER PIC X(1)     VALUE SPACES.
+
+      **========================================================
+       01 BANDERA.
+           05  EOF       PIC 9(1) VALUE 0.
+       01 FS-DATOSSAL    PIC 9(2).
+       01 AUX-ENTIDAD     PIC X(8).
+       01 AUX-CUENTA      PIC X(10).
+      **========================================================
+           EXEC SQL
+              INCLUDE DCLDAT2
+           END-EXEC.
+      **========================================================
+           EXEC SQL
+                INCLUDE SQLCA
+           END-EXEC.
+      **========================================================
+           EXEC SQL
+               DECLARE EMPLE CURSOR FOR
+                 SELECT
+                     MOV_ENTIOFI,
+                     MOV_CUENTA,
+                     MOV_CUENTA_PAG,
+                     MOV_FEOPER,
+                     MOV_IMPMOV,
+                     MOV_CLACON
+               FROM INDRA.MOVTOS
+               WHERE MOV_IMPMOV <> 0
+               ORDER BY MOV_ENTIOFI,MOV_CUENTA,MOV_FEOPER ASC
+           END-EXEC.
+      ******************* PROCEDURE DIVISION *******************
+       PROCEDURE DIVISION.
+       000-PRINCIPAL.
+           PERFORM 100-VALIDA-FILE-OUT
+           PERFORM 200-CTRL-ERROR UNTIL EOF = 1 OR SQLCODE = 100
+           CLOSE DATOSSAL
+           PERFORM 500-CERRAR-CURSOR
+           STOP RUN.
+      **========================================================
+       100-VALIDA-FILE-OUT.
+           EXEC SQL
+              OPEN EMPLE
+           END-EXEC.
+           OPEN OUTPUT DATOSSAL
+             IF FS-DATOSSAL NOT = 0
+                STOP RUN
+             END-IF.
+      **==========================================================
+       200-CTRL-ERROR.
+           PERFORM 600-RECORRER-ESCRIBIR
+      **==========================================================
+            IF SQLCODE = 0
+                   MOVE MOV-ENTIOFI TO OUT-MOV-ENTIOFI
+                   MOVE MOV-CUENTA TO OUT-MOV-CUENTA
+                   MOVE MOV-CUENTA-PAG TO OUT-MOV-CUENTA-PAG
+                   MOVE MOV-FEOPER TO OUT-MOV-FEOPER
+                   MOVE MOV-IMPMOV TO OUT-MOV-IMPMOV
+                   MOVE MOV-CLACON TO OUT-MOV-CLACON
+                   WRITE DATOSSAL2 FROM DATOSSAL1
+            ELSE IF SQLCODE = 100
+                    DISPLAY 'REGISTRO NO ENCONTRADO: ' SQLCODE
+                    ADD 1 TO EOF
+                 ELSE IF SQLCODE < 0 AND SQLCODE > 100
+                        DISPLAY 'A OCURRIDO UN WARNING ' SQLCODE
+                        ADD 1 TO EOF
+                    ELSE IF SQLCODE < 0
+                          DISPLAY 'A OCURRIDO UN ERROR' SQLCODE
+                          ADD 1 TO EOF
+                          STOP RUN
+                     END-IF
+                 END-IF
+            END-IF.
+      *==========================================================
+       600-RECORRER-ESCRIBIR.
+           EXEC SQL
+             FETCH EMPLE
+              INTO :MOV-ENTIOFI,
+                   :MOV-CUENTA,
+                   :MOV-CUENTA-PAG,
+                   :MOV-FEOPER,
+                   :MOV-IMPMOV,
+                   :MOV-CLACON
+               END-EXEC.
+      *=====================================================
+       500-CERRAR-CURSOR.
+               EXEC SQL
+                CLOSE EMPLE
+               END-EXEC.

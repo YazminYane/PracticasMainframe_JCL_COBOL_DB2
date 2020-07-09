@@ -1,0 +1,211 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. PRODB2P1.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+      ******************************************************************
+           SELECT LECTURA
+           ASSIGN TO LECTURA
+           FILE STATUS IS FS-LECTURA.
+      ******************************************************************
+         DATA DIVISION.
+         FILE SECTION.
+      ******************************************************************
+          FD   LECTURA
+               RECORDING MODE F
+               RECORD CONTAINS 256 CHARACTERS
+               DATA RECORD IS LAY-LEC1.
+       01 LAY-LEC1 PIC X(256).
+      ******************************************************************
+       WORKING-STORAGE SECTION.
+       01 DETALLES-LECTURA.
+          10 IN-MOV-ENTIOFI          PIC X(8).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-CUENTA           PIC X(10).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-FECONTA          PIC X(10).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-CLAOPER          PIC 9(2).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-SECUMOV          PIC X(26).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-FEOPER           PIC X(10).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-FEVALOR          PIC X(10).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-FELIQ            PIC X(10).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-ENTIOPE          PIC X(8).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-CLACON           PIC X(2).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-IMPMOV           PIC 9(16)V99.
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-ENDRETRO         PIC X(1).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-UGYINCOR         PIC X(1).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-UGYINDIF         PIC X(1).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-SALREAL          PIC 9(16)V99.
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-ENTIDAD-PAG      PIC X(4).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-CENTRO-PAG       PIC X(4).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-CUENTA-OAG       PIC X(10).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-DIGICCC1-PAG     PIC X(1).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-DIGICCC2-PAG     PIC X(1).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-CLADIS           PIC X(3).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-IND-MARCA1       PIC X(1).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-IND-MARCA2       PIC X(1).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-LIBRE-IMP1       PIC 9(16)V99.
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-LIBRE-IMP2       PIC 9(16)V99.
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-LIBRE-CAR1       PIC X(6).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-ENTIDAD-UMO      PIC X(4).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-CENTRO-UMO       PIC X(4).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-USERID-UMO       PIC X(8).
+          10 FILLER PIC X(1)         VALUE SPACES.
+          10 IN-MOV-NETNAME-UMO      PIC X(8).
+      **************BANDERAS***********************************
+          01   SWITCHES.
+               10 SW-ARCHIVO  PIC 9(1) VALUE 0.
+          01   FS-LECTURA     PIC 9(2).
+      *********************************************************
+           EXEC SQL
+                INCLUDE DCLMOVCR
+           END-EXEC.
+      ******************************************************************
+           EXEC SQL
+                INCLUDE SQLCA
+           END-EXEC.
+      ******************************************************************
+       PROCEDURE DIVISION.
+       10000-INICIO.
+             PERFORM 20000-APERTURA
+             PERFORM 20001-PROCESO1 UNTIL SW-ARCHIVO = 1
+             PERFORM 20002-SALIDA.
+       20000-APERTURA.
+              OPEN INPUT LECTURA
+                IF FS-LECTURA NOT = 0
+                  STOP RUN
+                END-IF
+                 READ LECTURA INTO DETALLES-LECTURA.
+      *****************************************************************
+       20001-PROCESO1.
+           MOVE IN-MOV-ENTIOFI TO MOV-ENTIOFI
+           MOVE IN-MOV-CUENTA TO MOV-CUENTA
+           MOVE IN-MOV-FECONTA TO MOV-FECONTA
+           MOVE IN-MOV-CLAOPER TO MOV-CLAOPER
+           MOVE IN-MOV-SECUMOV TO MOV-SECUMOV
+           MOVE IN-MOV-FEOPER TO MOV-FEOPER
+           MOVE IN-MOV-FEVALOR TO MOV-FEVALOR
+           MOVE IN-MOV-FELIQ TO MOV-FELIQ
+           MOVE IN-MOV-ENTIOPE TO MOV-ENTIOPE
+           MOVE IN-MOV-CLACON TO MOV-CLACON
+           MOVE IN-MOV-IMPMOV TO MOV-IMPMOV
+           MOVE IN-MOV-ENDRETRO TO MOV-ENDRETRO
+           MOVE IN-MOV-UGYINCOR TO MOV-UGYINCOR
+           MOVE IN-MOV-UGYINDIF TO MOV-UGYINDIF
+           MOVE IN-MOV-SALREAL TO MOV-SALREAL
+           MOVE IN-MOV-ENTIDAD-PAG TO MOV-ENTIDAD-PAG
+           MOVE IN-MOV-CENTRO-PAG TO MOV-CENTRO-PAG
+           MOVE IN-MOV-CUENTA-OAG TO MOV-CUENTA-OAG
+           MOVE IN-MOV-DIGICCC1-PAG TO MOV-DIGICCC1-PAG
+           MOVE IN-MOV-DIGICCC2-PAG TO MOV-DIGICCC2-PAG
+           MOVE IN-MOV-CLADIS TO MOV-CLADIS
+           MOVE IN-MOV-IND-MARCA1 TO MOV-IND-MARCA1
+           MOVE IN-MOV-IND-MARCA2 TO MOV-IND-MARCA2
+           MOVE IN-MOV-LIBRE-IMP1 TO MOV-LIBRE-IMP1
+           MOVE IN-MOV-LIBRE-IMP2 TO MOV-LIBRE-IMP2
+           MOVE IN-MOV-LIBRE-CAR1 TO MOV-LIBRE-CAR1
+           MOVE IN-MOV-ENTIDAD-UMO TO MOV-ENTIDAD-UMO
+           MOVE IN-MOV-CENTRO-UMO TO MOV-CENTRO-UMO
+           MOVE IN-MOV-USERID-UMO TO MOV-USERID-UMO
+           MOVE IN-MOV-NETNAME-UMO TO MOV-NETNAME-UMO
+           EXEC SQL
+             INSERT INTO INDRA.MOVTOS
+                      (MOV_ENTIOFI,
+                       MOV_CUENTA,
+                       MOV_FECONTA,
+                       MOV_CLAOPER,
+                       MOV_SECUMOV,
+                       MOV_FEOPER,
+                       MOV_FEVALOR,
+                       MOV_FELIQ,
+                       MOV_ENTIOPE,
+                       MOV_CLACON,
+                       MOV_IMPMOV,
+                       MOV_ENDRETRO,
+                       MOV_UGYINCOR,
+                       MOV_UGYINDIF,
+                       MOV_SALREAL,
+                       MOV_ENTIDAD_PAG,
+                       MOV_CENTRO_PAG,
+                       MOV_CUENTA_OAG,
+                       MOV_DIGICCC1_PAG,
+                       MOV_DIGICCC2_PAG,
+                       MOV_CLADIS,
+                       MOV_IND_MARCA1,
+                       MOV_IND_MARCA2,
+                       MOV_LIBRE_IMP1,
+                       MOV_LIBRE_IMP2,
+                       MOV_LIBRE_CAR1,
+                       MOV_ENTIDAD_UMO,
+                       MOV_CENTRO_UMO,
+                       MOV_USERID_UMO,
+                       MOV_NETNAME_UMO
+               ) VALUES(
+                      :MOV-ENTIOFI,
+                      :MOV-CUENTA,
+                      :MOV-FECONTA,
+                      :MOV-CLAOPER,
+                      :MOV-SECUMOV,
+                      :MOV-FEOPER,
+                      :MOV-FEVALOR,
+                      :MOV-FELIQ,
+                      :MOV-ENTIOPE,
+                      :MOV-CLACON,
+                      :MOV-IMPMOV,
+                      :MOV-ENDRETRO,
+                      :MOV-UGYINCOR,
+                      :MOV-UGYINDIF,
+                      :MOV-SALREAL,
+                      :MOV-ENTIDAD-PAG,
+                      :MOV-CENTRO-PAG,
+                      :MOV-CUENTA-OAG,
+                      :MOV-DIGICCC1-PAG,
+                      :MOV-DIGICCC2-PAG,
+                      :MOV-CLADIS,
+                      :MOV-IND-MARCA1,
+                      :MOV-IND-MARCA2,
+                      :MOV-LIBRE-IMP1,
+                      :MOV-LIBRE-IMP2,
+                      :MOV-LIBRE-CAR1,
+                      :MOV-ENTIDAD-UMO,
+                      :MOV-CENTRO-UMO,
+                      :MOV-USERID-UMO,
+                      :MOV-NETNAME-UMO)
+           END-EXEC.
+      ******************************************************************
+             IF SQLCODE = 0 OR SQLCODE = -803
+              READ LECTURA INTO DETALLES-LECTURA
+                           AT END MOVE 1 TO SW-ARCHIVO
+                 DISPLAY 'TERMINADO EXITOSO: ' SQLCODE
+             ELSE
+                  DISPLAY 'REGISTRO NO INSERTADO:' SQLCODE
+             END-IF.
+       20002-SALIDA.
+             CLOSE LECTURA
+             STOP RUN.

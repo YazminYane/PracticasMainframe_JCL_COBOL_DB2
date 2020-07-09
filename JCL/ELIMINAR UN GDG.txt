@@ -1,0 +1,11 @@
+//DELGDG JOB CLASS=A,MSGCLASS=A,NOTIFY=&SYSUID,MSGLEVEL=(1,1),          00010000
+//           PRTY=15                                                    00020000
+//*-------------------------------------------------------------        00030000
+//*                      ELIMINAR TODO EL GDG                           00040000
+//*-------------------------------------------------------------        00041000
+//*---------  EN VEZ DE FORCE SE PUEDE USAR PURGE  -------------        00042000
+//PASO1 EXEC PGM=IDCAMS                                                 00050000
+//SYSPRINT DD SYSOUT=*                                                  00060000
+//SYSIN    DD *                                                         00070000
+           DELETE (ACADEMIA.COBOL.MESES) GDG FORCE                      00071000
+/*                                                                      00080000

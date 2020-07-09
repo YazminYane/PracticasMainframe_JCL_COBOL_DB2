@@ -1,0 +1,49 @@
+//*******************************************************************
+//*SORTEO DEL ARCHIVO DEL MACTH Y DIVISION EN I/A
+//*******************************************************************
+//JCLA0001 JOB ('INDRA'),'INDRA',
+//         CLASS=A,MSGCLASS=X,REGION=0M,
+//         MSGLEVEL=(1,1),NOTIFY=&SYSUID
+//********************************************************************
+//PASO1    EXEC PGM=IDCAMS
+//SYSPRINT DD SYSOUT=*
+//SYSIN    DD *
+           DELETE ACADEMIA.COBOL.SORA
+           DELETE ACADEMIA.COBOL.SORI
+//*SET MAXCC=0
+/*
+//***************************************************************
+//PASO4    EXEC PGM=ICETOOL
+//INDD     DD DSN=ACADEMIA.COBOL.REPMATCH,DISP=SHR
+//OUTDD    DD DSN=ACADEMIA.COBOL.SORA,
+//            DISP=(NEW,CATLG,DELETE),
+//            SPACE=(CYL,(20,20),RLSE),
+//            UNIT=SYSDA,
+//            DCB=(DSORG=PS,RECFM=FB,LRECL=160)
+//TOOLIN   DD *
+    SORT FROM(INDD) TO(OUTDD) USING(CTL1)
+/*
+//CTL1CNTL DD *
+    SORT FIELDS=(160,1,CH,A)
+    INCLUDE COND=(160,1,CH,EQ,C'A')
+/*
+//TOOLMSG  DD SYSOUT=*
+//DFSMSG   DD SYSOUT=*
+
+//***************************************************************
+//PASO4    EXEC PGM=ICETOOL
+//INDD     DD DSN=ACADEMIA.COBOL.REPMATCH,DISP=SHR
+//OUTDD    DD DSN=ACADEMIA.COBOL.SORI,
+//            DISP=(NEW,CATLG,DELETE),
+//            SPACE=(CYL,(20,20),RLSE),
+//            UNIT=SYSDA,
+//            DCB=(DSORG=PS,RECFM=FB,LRECL=160)
+//TOOLIN   DD *
+    SORT FROM(INDD) TO(OUTDD) USING(CTL1)
+/*
+//CTL1CNTL DD *
+    SORT FIELDS=(160,1,CH,A)
+    INCLUDE COND=(160,1,CH,EQ,C'I')
+/*
+//TOOLMSG  DD SYSOUT=*
+//DFSMSG   DD SYSOUT=*

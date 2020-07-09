@@ -1,0 +1,368 @@
+      **=========================================================
+      ** PROGRAMA PRICIPAL EN QUE SE HACE EL MATCH PARA EL      *
+      ** REPORTE                                                *
+      **=============== IDENTIFICATION DIVISION =================
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. REPORACT.
+      **================== ENVIROMENT DIVISION ==================
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT DATOSLEC
+               ASSIGN TO DATOSLEC
+               ORGANIZATION IS SEQUENTIAL
+               FILE STATUS IS FS-DATOSLEC-T.
+           SELECT DATOSLAC
+               ASSIGN TO DATOSLAC
+               ORGANIZATION IS SEQUENTIAL
+               FILE STATUS IS FS-DATOSLAC-C.
+           SELECT DATOSSAL
+               ASSIGN TO DATOSSAL
+               ORGANIZATION IS SEQUENTIAL
+               FILE STATUS IS FS-DATOSSAL.
+           SELECT DATOSSOL
+               ASSIGN TO DATOSSOL
+               ORGANIZATION IS SEQUENTIAL
+               FILE STATUS IS FS-DATOSSOL.
+           SELECT DATOSSEL
+               ASSIGN TO DATOSSEL
+               ORGANIZATION IS SEQUENTIAL
+               FILE STATUS IS FS-DATOSSEL.
+      **==================== DATA DIVISION ======================
+       DATA DIVISION.
+      **==================== FILE SECTION =======================
+       FILE SECTION.
+      **====================== ARCHIVOS =========================
+       FD DATOSLEC
+           RECORDING MODE IS F
+           LABEL RECORDS ARE STANDARD
+           BLOCK CONTAINS 0 RECORDS
+           RECORD CONTAINS 44 CHARACTERS
+           DATA RECORD IS DATOSLEC1.
+       01 DATOSLEC1.
+           05 IN-CLIENTE-T       PIC X(8).
+           05 IN-NOTARJETA-T     PIC X(16).
+           05 IN-STATUS-T        PIC X(1).
+           05 IN-FVENCIMIENTO-T  PIC X(4).
+           05 IN-LCREDITO-T      PIC 9(13)V99.
+       FD DATOSLAC
+           RECORDING MODE IS F
+           LABEL RECORDS ARE STANDARD
+           BLOCK CONTAINS 0 RECORDS
+           RECORD CONTAINS 113 CHARACTERS
+           DATA RECORD IS DATOSLAC1.
+       01 DATOSLAC1.
+          05 IN-CCLIENTE-C    PIC X(8).
+          05 IN-CENTIDAD-C    PIC X(4).
+          05 IN-CCUENTA-C     PIC X(10).
+          05 IN-CFALTA-C      PIC X(10).
+          05 IN-CNOMBRE-C     PIC X(20).
+          05 IN-CAPPATERNO-C  PIC X(20).
+          05 IN-CAPMATERNO-C  PIC X(20).
+          05 IN-CSTATUS-C     PIC X(1).
+          05 IN-CCALTA-C      PIC X(4).
+          05 IN-CIMPORTE-C    PIC 9(13)V99.
+       FD DATOSSAL
+           RECORDING MODE IS F
+           LABEL RECORDS ARE STANDARD
+           BLOCK CONTAINS 0 RECORDS
+           RECORD CONTAINS 160 CHARACTERS
+           DATA RECORD IS DATOSSAL1.
+       01 DATOSSAL1 PIC X(160).
+       FD DATOSSOL
+           RECORDING MODE IS F
+           LABEL RECORDS ARE STANDARD
+           BLOCK CONTAINS 0 RECORDS
+           RECORD CONTAINS 150 CHARACTERS
+           DATA RECORD IS DATOSSOL1.
+       01 DATOSSOL1 PIC X(150).
+       FD DATOSSEL
+           RECORDING MODE IS F
+           LABEL RECORDS ARE STANDARD
+           BLOCK CONTAINS 0 RECORDS
+           RECORD CONTAINS 150 CHARACTERS
+           DATA RECORD IS DATOSSEL1.
+       01 DATOSSEL1 PIC X(150).
+      **=============== WORKING-STORE SECTION ===================
+       WORKING-STORAGE SECTION.
+      **===================== TITULOS ===========================
+       01 WS-WORK-AREA.
+         05 RPT-TITULO-PRINCIPAL.
+           10 FILLER PIC X(9) VALUE 'PROGRAMA:'.
+           10 FILLER PIC X(1) VALUE SPACES.
+           10 FILLER PIC X(8) VALUE 'REPORACT'.
+           10 FILLER PIC X(15) VALUE SPACES.
+           10 FILLER PIC X(16) VALUE 'REPORTE TARJETAS'.
+           10 FILLER PIC X(10) VALUE SPACES.
+           10 FILLER PIC X(6) VALUE 'FECHA:'.
+           10 FILLER PIC X(1) VALUE SPACES.
+           10 ANIO4 PIC 9(4).
+           10 FILLER PIC X(1) VALUE '-'.
+           10 SYS-MES PIC X(2).
+           10 FILLER PIC X(1) VALUE '-'.
+           10 SYS-DIA PIC X(2).
+         05 RPT-HORA.
+           10 FILLER PIC X(59) VALUE SPACES.
+           10 FILLER PIC X(5) VALUE 'HORA:'.
+           10 FILLER PIC X(1) VALUE SPACES.
+           10 SYS-HORA PIC X(2).
+           10 FILLER PIC X(1) VALUE ':'.
+           10 SYS-MIN PIC X(2).
+           10 FILLER PIC X(1) VALUE ':'.
+           10 SYS-SEG PIC X(2).
+
+         05 RPT-FILA-BLANCA.
+           10 FILLER PIC X(150) VALUE SPACES.
+         05 RPT-TITULO-ACTIVAS.
+           10 FILLER PIC X(33) VALUE SPACES.
+           10 FILLER PIC X(16) VALUE 'TARJETAS ACTIVAS'.
+      **==================== CABECERA ======================
+         05 RPT-CABECERA.
+           10 FILLER PIC X(7) VALUE 'CLIENTE'.
+           10 FILLER PIC X(3) VALUE SPACES.
+           10 FILLER PIC X(6) VALUE 'NOMBRE'.
+           10 FILLER PIC X(3) VALUE SPACES.
+           10 FILLER PIC X(11) VALUE 'NO. TARJETA'.
+           10 FILLER PIC X(9) VALUE SPACES.
+           10 FILLER PIC X(18) VALUE 'COMISION DESCUENTO'.
+           10 FILLER PIC X(3) VALUE SPACES.
+           10 FILLER PIC X(14) VALUE 'COMISION TOTAL'.
+           10 FILLER PIC X(3) VALUE SPACES.
+           10 FILLER PIC X(11) VALUE 'FECHA VENC.'.
+           10 FILLER PIC X(3) VALUE SPACES.
+           10 FILLER PIC X(6) VALUE 'CUENTA'.
+           10 FILLER PIC X(3) VALUE SPACES.
+           10 FILLER PIC X(5) VALUE 'CANAL'.
+           10 FILLER PIC X(3) VALUE SPACES.
+      **===================== GUIONES ===========================
+         05 RPT-GUIONES.
+           10 FILLER PIC X(8) VALUE ALL '-'.
+           10 FILLER PIC X(2) VALUE SPACES.
+           10 FILLER PIC X(40) VALUE ALL '-'.
+           10 FILLER PIC X(5) VALUE SPACES.
+      **==================== DETALLES ===========================
+       01 DETALLES.
+          05 OUT-CLIENTE-T      PIC X(8).
+          05 FILLER             PIC X(3) VALUE SPACES.
+          05 OUT-NOMBRECOMP     PIC X(40).
+          05 FILLER             PIC X(3) VALUE SPACES.
+          05 OUT-NOTARJETA-T    PIC X(16).
+          05 FILLER             PIC X(3) VALUE SPACES.
+          05 OUT-COMISION       PIC $ZZZZZZZZZZZZ9.99.
+          05 FILLER             PIC X(3) VALUE SPACES.
+          05 OUT-DESCUENTO      PIC $ZZZZZZZZZZZZ9.99.
+          05 FILLER             PIC X(3) VALUE SPACES.
+          05 OUT-COMISIONTOT    PIC $ZZZZZZZZZZZZ9.99.
+          05 FILLER             PIC X(3) VALUE SPACES.
+          05 OUT-CCUENTA-C      PIC X(10).
+          05 FILLER             PIC X(3) VALUE SPACES.
+          05 OUT-FVENCIMIENTO   PIC X(6).
+          05 FILLER             PIC X(3) VALUE SPACES.
+          05 OUT-CCALTA-C       PIC X(4).
+          05 OUT-STATUS-T       PIC X(1).
+      **==================== DETALLESSOL ========================
+       01 DETALLESSOL.
+          05 OUT-CCLIENTE-C   PIC X(8).
+          05 FILLER           PIC X(3) VALUE SPACES.
+          05 OUT-CENTIDAD-C   PIC X(4).
+          05 FILLER           PIC X(3) VALUE SPACES.
+      **  05 OUT-CCUENTA-C    PIC X(10).
+          05 FILLER           PIC X(3) VALUE SPACES.
+          05 OUT-CFALTA-C     PIC X(10).
+          05 FILLER           PIC X(3) VALUE SPACES.
+          05 OUT-CNOMBRE-C    PIC X(20).
+          05 FILLER           PIC X(3) VALUE SPACES.
+          05 OUT-CAPPATERNO-C PIC X(20).
+          05 FILLER           PIC X(3) VALUE SPACES.
+          05 OUT-CAPMATERNO-C PIC X(20).
+          05 FILLER           PIC X(3) VALUE SPACES.
+      **  05 OUT-CSTATUS-C    PIC X(1).
+          05 FILLER           PIC X(3) VALUE SPACES.
+      **  05 OUT-CCALTA-C     PIC X(4).
+          05 FILLER           PIC X(3) VALUE SPACES.
+          05 OUT-CIMPORTE-C   PIC 9(13)V99.
+      **==================== BANDERAS ===========================
+       01 BANDERAS.
+          05 EOF  PIC X VALUE 'Y'.
+          05 EOF2 PIC X VALUE 'Y'.
+          05 FS-DATOSLEC-T   PIC 99.
+          05 FS-DATOSLAC-C   PIC 99.
+          05 FS-DATOSSAL     PIC 99.
+          05 FS-DATOSSOL     PIC 99.
+          05 FS-DATOSSEL     PIC 99.
+          05 CONT-CUENTAS    PIC 9(3) VALUE 0.
+          05 CONT-TARJETAS   PIC 9(3) VALUE 0.
+          05 CONT-MATCH      PIC 9(3) VALUE 0.
+          05 TOT-MATCH       PIC 9(3) VALUE 0.
+          05 FS-DATOSLEC     PIC 9(3) VALUE 0.
+          05 FS-DATOSLAC     PIC 9(3) VALUE 0.
+       01 PARAMETROS.
+          05 PAR-NOMBRE       PIC X(20).
+          05 PAR-APPATERNO    PIC X(20).
+          05 PAR-APMATERNO    PIC X(20).
+          05 PAR-NOMCOMP      PIC X(40).
+       01 FECHA.
+          05 SYS-ANIO         PIC 9(2).
+          05 SYSDATE          PIC 9(6).
+          05 SYSTIME          PIC 9(6).
+       01 PARSTATUS.
+          05 PAR-LIMITE       PIC 9(13)V99.
+          05 PAR-IMPORUSADO   PIC 9(13)V99.
+          05 CALC-STATUS      PIC 9(13)V99.
+          05 PAR-CANAL        PIC X(4).
+          05 CALC-DESC        PIC 9(13)V99.
+          05 CALC-COMTOT      PIC 9(13)V99.
+       01 FECHAVEN.
+          05 FV-MES           PIC 9(2).
+          05 FV-ANIO          PIC 9(2).
+          05 FV-FORMATO       PIC 9(6).
+      **================== PROCEDURE DIVISION ===================
+       PROCEDURE DIVISION.
+      **==================== PRINCIPAL ==========================
+       000-PRINCIPAL.
+           PERFORM 100-VAL-ARCH-LEC
+           PERFORM 200-VAL-ARCH-SAL
+           PERFORM 970-FECHA-HORA
+           WRITE DATOSSAL1 FROM RPT-TITULO-PRINCIPAL
+           WRITE DATOSSAL1 FROM RPT-HORA
+           WRITE DATOSSAL1 FROM RPT-FILA-BLANCA
+           WRITE DATOSSAL1 FROM RPT-TITULO-ACTIVAS
+           WRITE DATOSSAL1 FROM RPT-FILA-BLANCA
+           WRITE DATOSSAL1 FROM RPT-FILA-BLANCA
+           WRITE DATOSSAL1 FROM RPT-CABECERA
+           WRITE DATOSSAL1 FROM RPT-GUIONES
+           PERFORM 300-PRMERAS-LECTURAS
+           PERFORM 400-ESACTIVO UNTIL EOF = 'N' OR EOF2 = 'N'.
+      **   DISPLAY CONT-MATCH.
+      **=========================================================
+       100-VAL-ARCH-LEC.
+           OPEN INPUT DATOSLAC
+           IF FS-DATOSLAC-C NOT = ZERO
+              STOP RUN
+           END-IF
+           OPEN INPUT DATOSLEC
+           IF FS-DATOSLEC-T NOT = ZERO
+             STOP RUN
+           END-IF.
+      **=========================================================
+       200-VAL-ARCH-SAL.
+           OPEN OUTPUT DATOSSAL
+           IF FS-DATOSSAL NOT = ZERO
+              STOP RUN
+           END-IF
+           OPEN OUTPUT DATOSSOL
+           IF FS-DATOSSOL NOT = ZERO
+             STOP RUN
+           END-IF
+           OPEN OUTPUT DATOSSEL
+           IF FS-DATOSSEL NOT = ZERO
+             STOP RUN
+           END-IF.
+      **=========================================================
+       300-PRMERAS-LECTURAS.
+           READ DATOSLEC
+           READ DATOSLAC.
+      **=========================================================
+       400-ESACTIVO.
+           IF IN-CCLIENTE-C = IN-CLIENTE-T
+              PERFORM 500-MOVER
+              WRITE DATOSSAL1 FROM DETALLES
+              PERFORM 900-LEER-CUENTAS
+              PERFORM 950-LEER-TARJETAS
+              COMPUTE CONT-MATCH = CONT-MATCH + 1
+      **      DISPLAY CONT-MATCH
+           END-IF
+           IF IN-CCLIENTE-C < IN-CLIENTE-T  THEN
+              PERFORM 600-MOVER2
+              WRITE DATOSSOL1 FROM DETALLESSOL
+              PERFORM 900-LEER-CUENTAS
+              COMPUTE CONT-CUENTAS = CONT-CUENTAS + 1
+           END-IF
+           IF IN-CCLIENTE-C > IN-CLIENTE-T THEN
+              PERFORM 600-MOVER2
+              WRITE DATOSSEL1 FROM DETALLESSOL
+              PERFORM 950-LEER-TARJETAS
+              COMPUTE CONT-TARJETAS = CONT-TARJETAS + 1
+           END-IF.
+      **=========================================================
+       900-LEER-CUENTAS.
+           READ DATOSLAC
+               AT END MOVE 'N' TO EOF
+           END-READ.
+      **=========================================================
+       950-LEER-TARJETAS.
+           READ DATOSLEC
+               AT END MOVE 'N' TO EOF2
+           END-READ.
+      **=========================================================
+       500-MOVER.
+           MOVE IN-CLIENTE-T TO OUT-CLIENTE-T
+           PERFORM 550-UNIR-NOMBRE
+           MOVE IN-NOTARJETA-T TO OUT-NOTARJETA-T
+           PERFORM 975-CALC-COMISION
+           MOVE IN-CCUENTA-C TO OUT-CCUENTA-C
+           PERFORM 980-FECHA-VENCIMIENTO
+           MOVE IN-CCALTA-C TO OUT-CCALTA-C
+           MOVE IN-STATUS-T TO OUT-STATUS-T
+      **   MOVE IN-CSTATUS-C TO OUT-CSTATUS-C
+           PERFORM 700-CHECK.
+      **=========================================================
+       550-UNIR-NOMBRE.
+           MOVE IN-CNOMBRE-C TO PAR-NOMBRE
+           MOVE IN-CAPPATERNO-C TO PAR-APPATERNO
+           MOVE IN-CAPMATERNO-C TO PAR-APMATERNO
+           CALL 'NOMBRE' USING PARAMETROS
+             MOVE PAR-NOMCOMP TO OUT-NOMBRECOMP.
+      **=========================================================
+       600-MOVER2.
+           MOVE IN-CCLIENTE-C TO OUT-CCLIENTE-C
+           MOVE IN-CENTIDAD-C  TO OUT-CENTIDAD-C
+           MOVE IN-CCUENTA-C TO OUT-CCUENTA-C
+           MOVE IN-CFALTA-C TO OUT-CFALTA-C
+           MOVE IN-CNOMBRE-C TO OUT-CNOMBRE-C
+           MOVE IN-CAPPATERNO-C TO OUT-CAPPATERNO-C
+           MOVE IN-CAPMATERNO-C TO OUT-CAPMATERNO-C
+      **   MOVE IN-CSTATUS-C TO OUT-CSTATUS-C
+           MOVE IN-CCALTA-C  TO OUT-CCALTA-C
+           MOVE IN-CIMPORTE-C TO OUT-CIMPORTE-C
+           PERFORM 700-CHECK.
+      **========================================================
+       700-CHECK.
+           IF( EOF = 'N' OR  EOF2 = 'N' )
+             PERFORM 900-CERRAR
+           END-IF.
+      **========================================================
+       900-CERRAR.
+           CLOSE DATOSLEC
+           CLOSE DATOSLAC
+           CLOSE DATOSSAL
+           CLOSE DATOSSOL
+           CLOSE DATOSSEL
+           STOP RUN.
+      **========================================================
+       970-FECHA-HORA.
+           ACCEPT SYSDATE FROM DATE
+           MOVE SYSDATE(1:2) TO SYS-ANIO
+           MOVE SYSDATE(3:2) TO SYS-MES
+           MOVE SYSDATE(5:2) TO SYS-DIA
+           COMPUTE ANIO4 = SYS-ANIO + 2000
+      ********
+           ACCEPT SYSTIME FROM TIME
+           MOVE SYSTIME(1:2) TO SYS-HORA
+           MOVE SYSTIME(3:2) TO SYS-MIN
+           MOVE SYSTIME(5:2) TO SYS-SEG.
+      **=========================================================
+       975-CALC-COMISION.
+           MOVE IN-LCREDITO-T TO PAR-LIMITE
+           MOVE IN-CIMPORTE-C TO PAR-IMPORUSADO
+           MOVE IN-CCALTA-C TO PAR-CANAL
+           CALL 'CALCCOMS' USING PARSTATUS
+               MOVE CALC-STATUS TO OUT-COMISION
+               MOVE CALC-DESC TO OUT-DESCUENTO
+               MOVE CALC-COMTOT TO  OUT-COMISIONTOT.
+      **=========================================================
+       980-FECHA-VENCIMIENTO.
+           MOVE IN-FVENCIMIENTO-T (1:2) TO FV-MES
+           MOVE IN-FVENCIMIENTO-T (3:2) TO FV-ANIO
+           COMPUTE FV-FORMATO = FV-ANIO + 2000
+           MOVE FV-FORMATO TO OUT-FVENCIMIENTO.

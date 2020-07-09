@@ -1,0 +1,10 @@
+//CREAPS JOB CLASS,NOTIFY=&SYSUID,MSGLEVEL=(1,1),MSGCLASS=A             00010002
+//*---------------------------------------------------------------      00010101
+//*                   CREA UN NUEVO DATASET                             00011001
+//*---------------------------------------------------------------      00012001
+//PASO1   EXEC PGM=IEFBR14  /* SE USA PARA CREAR UN NUEVO PS            00020001
+//CREAR  DD DSN=ACADEMIA.COBOL.PS10,                                    00030003
+//          DISP=(NEW,CATLG,DELETE),                                    00040000
+//          SPACE=(TRK,(10,5),RLSE),                                    00050000
+//          DCB=(LRECL=80,RECFM=FB,DSORG=PS)                            00060000
+/*                                                                      00070000

@@ -1,0 +1,17 @@
+//COPIAR JOB CLASS=A,MSGCLASS=A,NOTIFY=&SYSUID,MSGLEVEL=(1,1),
+//           PRTY=15
+//*--------------------------------------------------------------
+//*                 COPEA UN ARCHIVO A OTRO
+//*--------------------------------------------------------------
+//PASO1     EXEC PGM=SORT
+//SORTIN    DD DSN=ACADEMIA.COBOL.DATOS,DISP=SHR
+//SORTOUT   DD DSN=ACADEMIA.COBOL.DATSO2,
+//             DISP=(NEW,CATLG,DELETE),
+//             SPACE=(TRK,(10,5),RLSE),
+//             DCB=(LRECL=113,RECFM=FB,DSORG=PS)
+//SYSPRINT DD SYSOUT=*
+//SYSOUT   DD SYSOUT=*
+//SYSIN    DD *
+//*-----------  TAMBIEN SE PUEDE USAR : OPTION COPY -------------
+            SORT FIELDS=COPY
+/*

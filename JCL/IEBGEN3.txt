@@ -1,0 +1,13 @@
+//IEBGEN3 JOB CLASS=A,MSGCLASS=A,MSGLEVEL=(1,1),NOTIFY=&SYSUID,
+//            PRTY=15
+//*----------------------------------------------------------------
+//*        COPIAR UN PDS MEMBER A OTRO PDS
+//* EL MEMBER PUEDE NO ESTAR CREADO EN LA LIBRERIA DESTINO
+//*----------------------------------------------------------------
+//PASO1    EXEC  PGM=IEBGENER
+//SYSUT1   DD    DSN=ACADEMIA.COBOL.SPUFIS(TABLA4),DISP=SHR
+//SYSUT2   DD    DSN=ACADEMIA.COBOL.COPIA(TABLA4),DISP=SHR
+//SYSPRINT DD    SYSOUT=*
+//SYSOUT   DD    SYSOUT=*
+//SYSIN    DD    DUMMY
+/*

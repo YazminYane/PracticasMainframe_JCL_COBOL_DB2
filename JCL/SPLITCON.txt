@@ -1,0 +1,42 @@
+//SPLITCON JOB CLASS=A,MSGCLASS=A,NOTIFY=&SYSUID,MSGLEVEL=(1,1),
+//           PRTY=15
+//*--------------------------------------------------------------
+//*        USO DE SPLIT CON UNA CONDICION
+//* DIVIDE EL ARCHIVO EN 2 ACTIVO E INACTIVO
+//*--------------------------------------------------------------
+//PASO1     EXEC PGM=SORT
+//SORTIN    DD DSN=ACADEMIA.COBOL.DATOS,DISP=SHR
+//SORTOF1   DD DSN=ACADEMIA.COBOL.DATSO7,
+//             DISP=(NEW,CATLG,DELETE),
+//             SPACE=(TRK,(10,5),RLSE),
+//             DCB=(LRECL=113,RECFM=FB,DSORG=PS)
+//SORTOF2   DD DSN=ACADEMIA.COBOL.DATSO8,
+//             DISP=(NEW,CATLG,DELETE),
+//             SPACE=(TRK,(10,5),RLSE),
+//             DCB=(LRECL=113,RECFM=FB,DSORG=PS)
+//SYSPRINT DD SYSOUT=*
+//SYSOUT   DD SYSOUT=*
+//SYSIN    DD *
+            OPTION COPY
+            OUTFIL FILES=1,INCLUDE=(93,1,CH,EQ,C'A')
+            OUTFIL FILES=2,INCLUDE=(93,1,CH,EQ,C'I')
+/*
+//*--------------------------------------------------------------
+//* SE PUEDE PERDONAL EL NOMBRE CON FNAMES
+//*--------------------------------------------------------------
+//PASO2     EXEC PGM=SORT
+//SORTIN    DD DSN=ACADEMIA.COBOL.DATOS,DISP=SHR
+//FILE1     DD DSN=ACADEMIA.COBOL.DATSO9,
+//             DISP=(NEW,CATLG,DELETE),
+//             SPACE=(TRK,(10,5),RLSE),
+//             DCB=(LRECL=113,RECFM=FB,DSORG=PS)
+//FILE2     DD DSN=ACADEMIA.COBOL.DATSO10,
+//             DISP=(NEW,CATLG,DELETE),
+//             SPACE=(TRK,(10,5),RLSE),
+//             DCB=(LRECL=113,RECFM=FB,DSORG=PS)
+//SYSPRINT DD SYSOUT=*
+//SYSOUT   DD SYSOUT=*
+//SYSIN    DD *
+            OPTION COPY
+            OUTFIL FNAMES=(FILE1,FILE2)
+/*

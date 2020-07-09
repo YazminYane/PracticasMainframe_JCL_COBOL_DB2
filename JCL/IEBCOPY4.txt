@@ -1,0 +1,18 @@
+//IEBCOPY4 JOB CLASS=A,MSGCLASS=A,MSGLEVEL=(1,1),NOTIFY=&SYSUID,
+//             PRTY=15
+//*--------------------------------------------------------------
+//*       EXCLUIR MEMBER AL COPIAR 1/N LIBRERIAS A OTRA
+//*       LAS LIBRERIAS DEBEN ESTAR CREADAS
+//*--------------------------------------------------------------
+//PASO1    EXEC PGM=IEBCOPY
+//DD1      DD   DSN=ACADEMIA.COBOL.COPYS,DISP=SHR   <-- INPUT DATASET
+//DD2      DD   DSN=ACADEMIA.COBOL.COSAS2,DISP=SHR  <-- INPUT DATASET
+//DD3      DD   DSN=ACADEMIA.COBOL.COPIA,DISP=SHR   <-- OUTPUT DATASET
+//SYSPRINT DD   SYSOUT=*
+//SYSOUT   DD   SYSOUT=*
+//SYSIN    DD   *
+            COPY OUTDD=DD3
+                  INDD=DD1
+                  INDD=DD2
+            EXCLUDE MEMBER=(MEMBER1,MEMBER2,COSA2)  <--MEMBER EXCLUIDOS
+/*

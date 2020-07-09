@@ -1,0 +1,95 @@
+      *=====================================================
+      * RUTINA QUE REALIZA ALTA DE UN EMPLEADO.
+      *=====================================================
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. RUTINAAL.
+       ENVIRONMENT DIVISION.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+      *=====================================================
+            EXEC SQL
+               INCLUDE DCLEMP
+            END-EXEC.
+      *=====================================================
+            EXEC SQL
+               INCLUDE SQLCA
+            END-EXEC.
+      *=====================================================
+       LINKAGE SECTION.
+       01 DFHCOMMAREA.
+         05 R-EPNO     PIC X(6).
+         05 R-WORKDEPT  PIC X(3).
+         05 R-NOMBRE    PIC X(20).
+         05 R-APATERNO  PIC X(20).
+         05 R-AMATERNO  PIC X(20).
+         05 R-PHONENO   PIC X(10).
+         05 R-DIRECCION PIC X(30).
+         05 R-SEX       PIC X(1).
+         05 R-BIRTHDATE PIC X(10).
+         05 R-PUESTO    PIC X(15).
+         05 R-SALARY    PIC X(13).
+         05 R-BONUS     PIC X(13).
+         05 R-COMM      PIC X(13).
+         05 R-MSG       PIC X(40).
+      *=====================================================
+       PROCEDURE DIVISION.
+       000-PRINCIPAL.
+           PERFORM 001-MOVER-DATOS
+           PERFORM 002-CONSULTA-ALTA
+           PERFORM 003-VALIDAR-CODIGO-SQL
+           GOBACK.
+      *=====================================================
+       001-MOVER-DATOS.
+            MOVE R-EPNO TO H-EMPNO
+            MOVE R-WORKDEPT TO H-WORKDEPT
+            MOVE R-NOMBRE TO H-NOMBRE
+            MOVE R-APATERNO TO H-APATERNO
+            MOVE R-AMATERNO TO H-AMATERNO
+            MOVE R-PHONENO TO H-PHONENO
+            MOVE R-DIRECCION TO H-DIRECCION
+            MOVE R-SEX TO H-SEX
+            MOVE R-BIRTHDATE TO H-BIRTHDATE
+            MOVE R-PUESTO TO H-PUESTO
+            COMPUTE H-SALARY = FUNCTION NUMVAL (R-SALARY)
+            COMPUTE H-BONUS = FUNCTION NUMVAL (R-BONUS)
+            COMPUTE H-COMM = FUNCTION NUMVAL (R-COMM).
+      *=====================================================
+       002-CONSULTA-ALTA.
+            EXEC SQL
+                INSERT INTO INDRA.EMP
+                      (EMPNO,
+                       WORKDEPT,
+                       NOMBRE,
+                       APATERNO,
+                       AMATERNO,
+                       PHONENO,
+                       DIRECCION,
+                       SEX,
+                       BIRTHDATE,
+                       PUESTO,
+                       SALARY,
+                       BONUS,
+                       COMM
+                 )VALUES(
+                       :H-EMPNO,
+                       :H-WORKDEPT,
+                       :H-NOMBRE,
+                       :H-APATERNO,
+                       :H-AMATERNO,
+                       :H-PHONENO,
+                       :H-DIRECCION,
+                       :H-SEX,
+                       :H-BIRTHDATE,
+                       :H-PUESTO,
+                       :H-SALARY,
+                       :H-BONUS,
+                       :H-COMM
+                        )
+            END-EXEC.
+      *=====================================================
+       003-VALIDAR-CODIGO-SQL.
+            IF SQLCODE = 0 OR SQLCODE = -803
+                 MOVE 'ALTA EXITOSA' TO R-MSG
+            ELSE
+                 MOVE 'VUELVA A INTRODUCIR LOS DATOS' TO R-MSG
+            END-IF.

@@ -1,0 +1,30 @@
+   CREATE TABLE INDRA.EMP                                               00020000
+         (EMPNO     CHAR(6)               NOT NULL,                     00030000
+          WORKDEPT  CHAR(3)               NOT NULL,                     00040000
+          NOMBRE    CHAR(20)              NOT NULL,                     00050000
+          APATERNO  CHAR(20)              NOT NULL,                     00060000
+          AMATERNO  CHAR(20)              NOT NULL,                     00070000
+          PHONENO   CHAR(10)              NOT NULL,                     00080000
+          DIRECCION CHAR(30)                   ,                        00090000
+          SEX       CHAR(1)                       ,                     00100000
+          BIRTHDATE DATE                          ,                     00110000
+          PUESTO    CHAR(15)                   ,                        00120000
+          SALARY    DECIMAL(9,2)                  ,                     00130000
+          BONUS     DECIMAL(9,2)                  ,                     00140000
+          COMM      DECIMAL(9,2)                                        00150000
+    ) IN DSN8D81A.INDRA ;                                               00160000
+     CREATE TYPE 2 UNIQUE INDEX INDRA.EMP_IX                            00170000
+               ON INDRA.EMP                                             00180000
+            (                                                           00190000
+            EMPNO,                                                      00200000
+            WORKDEPT                                                    00210000
+                     )                                                  00220000
+                 USING STOGROUP   SYSDEFLT                              00230000
+                        PRIQTY     10                                   00240000
+                        SECQTY     10                                   00250000
+                        ERASE      NO                                   00260000
+                        CLUSTER                                         00270000
+                        BUFFERPOOL BP0                                  00280000
+                        CLOSE      NO  ;                                00290000
+               COMMIT;                                                  00300000
+   COMMIT;                                                              00310000

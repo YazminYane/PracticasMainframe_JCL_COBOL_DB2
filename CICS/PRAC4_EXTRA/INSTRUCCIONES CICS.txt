@@ -1,0 +1,114 @@
+Definición de transaccion y componentes en el CICS  
+                  
+CEDA DEF PROG(CICSHOLA) GROUP (DESA)  *************************************************************************
+CEDA DEF MAP(PROG_MAPA) GROUP(DESA)  ============================================================================================1
+CEDA DEF TRANS(HOLA) PROG(CICSHOLA) GROUP(DESA)
+Si hacemos un CEDA DI GROUP (DESA), aparecer  una lista tal que esta: 
+
+  DI GROUP(DESA)                                                                
+  ENTER COMMANDS                                                                
+   NAME     TYPE         GROUP                                   DATE   TIME    
+   TMAPHOL  MAPSET       DESA                                    19.232 12.27.21
+   TMAP001  MAPSET       DESA                                    19.202 16.44.44
+   TMAP01   MAPSET       DESA                                    19.202 16.24.02
+   CICSHOLA PROGRAM      DESA                                    19.232 12.26.30
+   EJER0050 PROGRAM      DESA                                    19.202 19.30.49
+   XYZ2     PROGRAM      DESA                                    19.205 19.25.30
+   HOLA     TRANSACTION  DESA                                    19.232 12.28.16
+   TXYZ     TRANSACTION  DESA  E                                  19.204 01.07.19
+   T050     TRANSACTION  DESA                                    19.202 19.33.08
+   CXYZ     DB2CONN      DESA                                    19.205 19.16.12
+   DB9G     DB2CONN      DESA                                    19.204 13.03.31
+   DB9GC    DB2CONN      DESA                                    19.206 15.33.52
+   DB9GCONN DB2CONN      DESA                                    19.204 15.38.38
+   DB9G     DB2ENTRY     DESA                                    19.205 10.55.35
+   DB9GE    DB2ENTRY     DESA                                    19.206 09.19.09
+   DB9GENTR DB2ENTRY     DESA                                    19.204 13.10.45
+ + EXYZ     DB2ENTRY     DESA                                    19.205 19.13.27
+ + T050     TRANSACTION  DESA                                    19.202 19.33.08
+   CXYZ     DB2CONN      DESA                                    19.205 19.16.12
+   DB9G     DB2CONN      DESA                                    19.204 13.03.31
+   DB9GC    DB2CONN      DESA                                    19.206 15.33.52
+   DB9GCONN DB2CONN      DESA                                    19.204 15.38.38
+   DB9G     DB2ENTRY     DESA                                    19.205 10.55.35
+   DB9GE    DB2ENTRY     DESA                                    19.206 09.19.09
+   DB9GENTR DB2ENTRY     DESA                                    19.204 13.10.45
+   EXYZ     DB2ENTRY     DESA                                    19.205 19.13.27
+   TXYZ     DB2ENTRY     DESA                                    19.204 16.15.47
+   DB9GT    DB2TRAN      DESA                                    19.206 09.22.50
+   DB9GTRAN DB2TRAN      DESA                                    19.204 13.15.13
+   DB9GTSAN DB2TRAN      DESA                                    19.205 12.12.59
+   RXYZ     DB2TRAN      DESA                                    19.205 19.19.22
+                                                                                                                                                                                                                        
+
+
+Instalación de transaccion y componentes en el CICS  
+
+CEDA DIS MAP(NOM_MAPA) GR(DESA)    =========================================================================================2
+
+NAME TYPE GROUP DATE TIME
+EJE0050 MAPSET DESA I INSTALL SUCCESSFUL
+
+
+CEDA DIS PROG(CICSHOLA) GR(DESA)  **********************************************************************+
+ENTER COMMANDS
+NAME TYPE GROUP DATE TIME
+EJER0050 PROGRAM DESA I INSTALL SUCCESSFUL
+
+
+CEDA DIS TRANS(HOLA) GR(DESA)
+ENTER COMMANDS
+NAME TYPE GROUP DATE TIME
+T050 TRANSACTION DESA INSTALL SUCCESSFUL
+
+
+Podemos probar como sale el mapa con la siguiente instrucción:
+
+CECI SEND MAP(NOM_MAPA)  =================================================================3
+
+saldra esto:
+
+SEND MAP(TMAPHOL)
+STATUS: COMMAND EXECUTION COMPLETE NAME=
+EXEC CICS SENd Map( 'TMAPHOL' )
+<< FROm() > < LEngth() > < DAtaonly > | MAPOnly >
+< MAPSet() >
+< FMhparm() >
+< Reqid() >
+< LDc() | < ACTpartn() > < Outpartn() > >
+< MSr() >
+< Cursor() >
+< Set() < MAPPingdev() > | PAging | Terminal < Wait > < LAst > >
+< PRint >
+< FREekb >
+< ALArm >
+< L40 | L64 | L80 | Honeom >
+< NLeom >
+< ERASE < DEfault | ALTernate > | ERASEAup >
+< ACCum >
+< FRSet >
++ < NOflush >
+
+Si nos manda este mensaje al usar CECI
+
+RESPONSE: ABEND APCT EIBRESP=+0000000000 EIBRESP2=+0000000000 
+
+quiere decir que no hemos definido como recurso de CICS el mapa
+
+Si modificamos el mapa lo refrescamos con CEMT asi:
+
+CEMT I PROG(CICSHOLA)
+STATUS: RESULTS - OVERTYPE TO MODIFY
+Prog(CICSHOLA ) Leng(0000000240) Map Ena Pri NEW
+Res(000) Use(0000000005) Qua Cic
+		
+notese es PROG no MAP   ****************************************************************************************************
+
+Le damos ENTER y saldra el mapa
+
+
+
+                                    
+Para refrescar (cargar el objeto en los recursos de CICS) con CEMT asi:
+
+CEMT I PROG(CICSHOLA)                                             

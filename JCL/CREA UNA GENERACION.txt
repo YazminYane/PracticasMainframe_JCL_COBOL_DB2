@@ -1,0 +1,28 @@
+//CREAGEN JOB CLASS=A,NOTIFY=&SYSUID,MSGLEVEL=(1,1),MSGCLASS=A,         00010000
+//            PRTY=15                                                   00020000
+//*-------------------------------------------------------------        00030000
+//*             CREAR UNA GENERACION DENTRO DEL GDG                     00040000
+//*-------------------------------------------------------------        00050000
+//PASO1    EXEC PGM=IEFBR14                                             00060000
+//CREA     DD DSN=ACADEMIA.COBOL.MESES(+1),                             00061000
+//            DISP=(NEW,CATLG,DELETE),                                  00062000
+//            SPACE=(TRK,(100,100),RLSE),                               00062100
+//            DCB=(LRECL=80,RECFM=FB,BLKSIZE=800,DSORG=PS)              00063000
+//SYSPRINT DD SYSOUT=*                                                  00070000
+/*                                                                      00130000
+//*-------------------------------------------------------------        00140001
+//*       HACER REFERENCIA A UNA GENERACION EN PARTICULAR               00150001
+//*-------------------------------------------------------------        00160001
+//PASO2    EXEC PGM=IEFBR14                                             00170001
+//CREA     DD DSN=ACADEMIA.COBOL.MESES(-1),                             00180001
+//            DISP=(OLD,DELETE,DELETE)                                  00190001
+//SYSPRINT DD SYSOUT=*                                                  00220001
+//SYSIN    DD DUMMY                                                     00221001
+/*                                                                      00230001
+//*                                                                     00240001
+//PASO3    EXEC PGM=IEFBR14                                             00250001
+//CREA     DD DSN=ACADEMIA.COBOL.MESES.G0003V00,                        00260001
+//            DISP=(OLD,DELETE,DELETE)                                  00270001
+//SYSPRINT DD SYSOUT=*                                                  00280001
+//SYSIN    DD DUMMY                                                     00290001
+/*                                                                      00300001

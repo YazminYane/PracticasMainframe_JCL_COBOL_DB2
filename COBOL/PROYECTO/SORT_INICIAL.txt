@@ -1,0 +1,30 @@
+//***************************************************************
+//*SORTEA LOS ARCHIVOS ORIGINALES DE CUENTAS Y TARJETAS
+//***************************************************************
+//JCLA0001 JOB ('INDRA'),'INDRA',
+//         CLASS=A,MSGCLASS=X,REGION=0M,
+//         MSGLEVEL=(1,1),NOTIFY=&SYSUID
+//********************************************************************
+//PASO1    EXEC PGM=IDCAMS
+//SYSPRINT DD SYSOUT=*
+//SYSIN    DD *
+           DELETE ACADEMIA.COBOL.ENTRCUEN
+           DELETE ACADEMIA.COBOL.ENTRTARJ
+//*SET MAXCC=0
+/*
+//***************************************************************
+//PASO4    EXEC PGM=ICETOOL
+//INDD     DD DSN=ACADEMIA.COBOL.ENTRCUEN,DISP=SHR
+//OUTDD    DD DSN=ACADEMIA.COBOL.ENTRCUE3,
+//            DISP=(NEW,CATLG,DELETE),
+//            SPACE=(CYL,(20,20),RLSE),
+//            UNIT=SYSDA,
+//            DCB=(DSORG=PS,RECFM=FB,LRECL=113)
+//TOOLIN   DD *
+/*  SORT FROM(INDD) TO(OUTDD) USING(CTL1)
+/*
+//*CTL1CNTL DD *
+     SORT FIELDS=(1,8,CH,A)
+/*
+//TOOLMSG  DD SYSOUT=*
+//DFSMSG   DD SYSOUT=*

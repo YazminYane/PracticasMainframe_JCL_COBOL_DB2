@@ -1,0 +1,14 @@
+//IEBGEN2 JOB CLASS=A,MSGCLASS=A,MSGLEVEL=(1,1),NOTIFY=&SYSUID,
+//            PRTY=15
+//*-------------------------------------------------------------
+//* UNIR EL CONTENIDO DE VARIOS ARCHIVOS EN UNO
+//* LOS ARCHIVOS DEBEN ESTAR CREADOS
+//*-------------------------------------------------------------
+//PASO1    EXEC PGM=IEBGENER
+//SYSUT1   DD   DSN=ACADEMIA.COBOL.DATOS,DISP=SHR     <-- INPUT DATASET
+//         DD   DSN=ACADEMIA.COBOL.DATOS3,DISP=SHR    <-- INPUT DATASET
+//SYSUT2   DD   DSN=ACADEMIA.COBOL.DATOS8,DISP=SHR
+//SYSPRINT DD   SYSOUT=*
+//SYSOUT   DD   SYSOUT=*
+//SYSIN    DD   DUMMY
+/*

@@ -1,0 +1,118 @@
+      *=====================================================
+      *  PROGRAMA QUE MUESTRA LOS DATOS DE UN EMPLEADO DE
+      *    ACUERDO AL NUMERO DE EMPLEADO INTRODUCIDO.
+      *=====================================================
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. PRAC02.
+       ENVIRONMENT DIVISION.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 TEMP-NOMBRE-COM PIC X(40).
+       01 TEMP-SALARI1 PIC 9(11)V99.
+       01 TEMP-SALARIO PIC $99999.99.
+      *=====================================================
+            COPY MAPCIC2.
+      *=====================================================
+            EXEC SQL
+               INCLUDE DCLEMP
+            END-EXEC.
+      *=====================================================
+            EXEC SQL
+               INCLUDE SQLCA
+            END-EXEC.
+      *=====================================================
+       PROCEDURE DIVISION.
+           PERFORM 001-MOSTRAR-MAPA
+           PERFORM 002-RECIBIR-DATO
+           PERFORM 008-FIN.
+      *=====================================================
+       001-MOSTRAR-MAPA.
+            INITIALIZE MAPA2O
+            INITIALIZE MAPA2I
+            EXEC CICS SEND
+                    MAP('MAPA2')
+                    ERASE
+            END-EXEC.
+      *=====================================================
+       002-RECIBIR-DATO.
+            EXEC CICS RECEIVE
+                    MAP('MAPA2')
+                    INTO(MAPA2I)
+            END-EXEC
+            MOVE NUMEMPI TO H-EMPNO
+            PERFORM 003-SELECCIONAR-DATOS
+            PERFORM 006-VALIDACIONES.
+      *=====================================================
+      *      PASA EL DATO DEL COPY A LA VAR DEL DB2
+      *=====================================================
+       003-SELECCIONAR-DATOS.
+             EXEC SQL
+                SELECT
+                       NOMBRE,
+                       APATERNO,
+                       AMATERNO,
+                       WORKDEPT,
+                       PUESTO,
+                       SALARY
+                INTO
+                     :H-NOMBRE,
+                     :H-APATERNO,
+                     :H-AMATERNO,
+                     :H-WORKDEPT,
+                     :H-PUESTO,
+                     :H-SALARY
+                FROM INDRA.EMP
+                WHERE EMPNO = :H-EMPNO
+             END-EXEC.
+      *=====================================================
+       003-UNIR-NOMBRE.
+                MOVE SPACES TO TEMP-NOMBRE-COM
+                STRING H-NOMBRE DELIMITED BY '  '
+                             ' ' DELIMITED BY SIZE
+                       H-APATERNO DELIMITED BY '  '
+                             ' ' DELIMITED BY SIZE
+                       H-AMATERNO DELIMITED BY '  '
+                INTO TEMP-NOMBRE-COM
+                END-STRING
+                MOVE TEMP-NOMBRE-COM TO NOMBREO.
+      *=====================================================
+      *    PASA LAS VAR DE HOST A LAS VAR DEL MAP DE SAL
+      *=====================================================
+       004-VALIDAR-CODIGO-SQL.
+             IF SQLCODE = 0
+                 PERFORM 003-UNIR-NOMBRE
+                 MOVE H-SALARY TO TEMP-SALARI1
+                 MOVE TEMP-SALARI1 TO TEMP-SALARIO
+                 MOVE H-WORKDEPT TO DEPARTO
+                 MOVE H-PUESTO TO PUESTOO
+                 MOVE TEMP-SALARIO TO SALARIOO
+                 MOVE 'REGISTRO ENCONTRADO' TO MSGO
+                 PERFORM 007-ENVIAR-MAPA-DATOS
+              ELSE
+                 MOVE 'REGISTRO NO ENCONTRADO' TO MSGO
+                 PERFORM 007-ENVIAR-MAPA-DATOS
+             END-IF.
+      *=====================================================
+       006-VALIDACIONES.
+           IF H-EMPNO = SPACES OR LOW-VALUES
+                MOVE 'INGRESE UN NUMERO DE EMPLEADO' TO MSGO
+                PERFORM 007-ENVIAR-MAPA-DATOS
+           ELSE IF H-EMPNO IS NOT NUMERIC
+                   MOVE 'INGRESE UN VALOR NUMERICO' TO MSGO
+                   PERFORM 007-ENVIAR-MAPA-DATOS
+                ELSE
+                   PERFORM 004-VALIDAR-CODIGO-SQL
+                END-IF
+           END-IF.
+      *=====================================================
+       007-ENVIAR-MAPA-DATOS.
+             EXEC CICS SEND
+                  MAP('MAPA2')
+                  FROM(MAPA2O)
+             END-EXEC.
+      *=====================================================
+       008-FIN.
+            EXEC CICS RETURN
+                 TRANSID('MAP2')
+            END-EXEC.
+

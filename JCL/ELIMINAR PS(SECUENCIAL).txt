@@ -1,0 +1,9 @@
+//DELPS JOB CLASS=A,PRTY=15,MSGCLASS=A,MSGLEVEL=(1,1),                  00010000
+//          NOTIFY=&SYSUID                                              00020000
+//*--------------------------------------------------------------       00030000
+//*             ELIMINA UN PS (SECUENCIAL)                              00040000
+//*--------------------------------------------------------------       00050000
+//PASO1  EXEC PGM=IEFBR14                                               00060000
+//NOMBRE DD   DSN=ACADEMIA.COBOL.PS,                                    00070000
+//            DISP=(OLD,DELETE,DELETE)                                  00080000
+/*                                                                      00090000

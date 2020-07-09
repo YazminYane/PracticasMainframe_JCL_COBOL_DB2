@@ -1,0 +1,13 @@
+//UNCATALO JOB  CLASS=A,MSGCLASS=A,MSGLEVEL=(1,1),NOTIFI=&SYSUID
+//           PRTY=15
+//*---------------------------------------------------------------
+//*          DESCATALOGAR UN MEMBER DE UN DATASET
+//* NO PROBADO
+//*---------------------------------------------------------------
+//PASO1    EXEC PGM=IEHLIST
+//DD1      DD   UNIT=DISK,VOLUME=SER=PUB000
+//SYSPRINT DD   SYSOUT=*
+//SYSOUT   DD   SYSOUT=*
+//SYSIN    DD   *
+       SCRATCH DSNAME=ABHI.COURSE.PS1,VOL=DISK=PUB001,MEMBER=MEMBER1
+/*

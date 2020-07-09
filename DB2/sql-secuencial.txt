@@ -1,0 +1,93 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. EJEMPLO1.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+      ******************************************************************
+           SELECT SALIDA1
+           ASSIGN TO SALIDA1
+           FILE STATUS IS FS-SALIDA1.
+      ******************************************************************
+         DATA DIVISION.
+         FILE SECTION.
+      ******************************************************************
+          FD   SALIDA1
+               RECORDING MODE F
+               RECORD CONTAINS 91 CHARACTERS
+               DATA RECORD IS LAY-SAL1.
+       01 LAY-SAL1.
+          10 OU-NO-EMPLEADOS   PIC X(9).
+          10 OU-NOMBRE         PIC X(40).
+          10 OU-DIRECCION      PIC X(40).
+          10 OU-ANTIGUEAD      PIC 9(2)V.
+      ******************************************************************
+       WORKING-STORAGE SECTION.
+          01   SWITCHES.
+               10 SW-ARCHIVO  PIC 9(1) VALUE 0.
+          01   FS-SALIDA1     PIC 9(2).
+           EXEC SQL
+                INCLUDE DCLEMP
+           END-EXEC.
+      ******************************************************************
+           EXEC SQL
+                INCLUDE SQLCA
+           END-EXEC.
+      ******************************************************************
+           EXEC SQL
+             DECLARE CURSOR_EMPLEADOS CURSOR FOR
+             SELECT NO_EMPLEADOS,
+                    NOMBRE,
+                    DIRECCION,
+                    ANTIGUEAD
+             FROM INDRA.EMPLEADOS
+             ORDER BY NO_EMPLEADOS,ANTIGUEAD ASC
+             END-EXEC.
+      ******************************************************************
+      ******************************************************************
+       PROCEDURE DIVISION.
+       10000-INICIO.
+             PERFORM 20001-APERTURA
+             PERFORM 20000-PROCESO1 UNTIL SQLCODE = 100
+                                    OR SW-ARCHIVO = 1
+                    CLOSE SALIDA1
+             EXEC SQL
+                CLOSE CURSOR_EMPLEADOS
+             END-EXEC.
+                     STOP RUN.
+       20001-APERTURA.
+             EXEC SQL
+                OPEN CURSOR_EMPLEADOS
+             END-EXEC.
+              OPEN OUTPUT SALIDA1
+              IF FS-SALIDA1 NOT = 0
+               STOP RUN
+               END-IF.
+      *****************************************************************
+       20000-PROCESO1.
+      ******************************************************************
+             EXEC SQL
+                FETCH CURSOR_EMPLEADOS
+                INTO :NO-EMPLEADOS,
+                     :NOMBRE,
+                     :DIRECCION,
+                     :ANTIGUEAD
+             END-EXEC.
+      ******************************************************************
+             IF SQLCODE  EQUAL ZERO
+             MOVE NO-EMPLEADOS TO OU-NO-EMPLEADOS
+             MOVE NOMBRE TO OU-NOMBRE
+             MOVE DIRECCION TO OU-DIRECCION
+             MOVE ANTIGUEAD TO OU-ANTIGUEAD
+             WRITE LAY-SAL1
+             DISPLAY 'TERMINADO EXITOSO: ' SQLCODE
+             ELSE
+                IF  SQLCODE < 0
+                  DISPLAY 'REGISTRO NO ENCONTRADO:' SQLCODE
+                ELSE
+                  DISPLAY 'ERROR DE EJECUCION SQL:' SQLCODE
+             END-IF
+                   IF SQLCODE > 100
+                ADD 1 TO SW-ARCHIVO
+                END-IF
+                   END-IF.
+      *      ADD 1 TO SW-ARCHIVO.

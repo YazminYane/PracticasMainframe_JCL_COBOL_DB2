@@ -1,0 +1,122 @@
+      ********************************************
+      *------ IDENTIFICATION DIVISION ---------- *
+      ********************************************
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID GENERO01.
+      ********************************************
+      *------ ENVIROMENT DIVISION     ---------- *
+      ********************************************
+      *********INPUT-OUTPUT SECTION***************
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT DATOSLEC
+               ASSIGN TO DATOSLEC
+               ORGANIZATION IS SEQUENTIAL
+               FILE STATUS IS FS-DATOSLEC.
+           SELECT DATOSSAL
+               ASSIGN TO DATOSSAL
+               ORGANIZATION IS SEQUENTIAL
+               FILE STATUS IS FS-DATOSSAL.
+      ********************************************
+      *       DATA DIVISION                      *
+      ********************************************
+      *====== WORKING-STORAGE SECTION============*
+       DATA DIVISION.
+       FILE SECTION.
+       FD DATOSLEC
+           RECORDING MODE IS F
+           LABEL RECORDS ARE STANDARD
+           BLOCK CONTAINS 0 RECORDS
+           RECORD CONTAINS 15 CHARACTERS
+           DATA RECORD IS DATOSLEC1.
+       01 DATOSLEC1.
+           05 IN-GENERO PIC X(1).
+           05 IN-EDAD PIC 9(2).
+           05 IN-TIPO-DOC PIC 9(3).
+           05 IN-SIGLO PIC X(2).
+           05 IN-ANIO PIC X(2).
+       FD DATOSSAL
+           RECORDING MODE IS F
+           LABEL RECORDS ARE STANDARD
+           BLOCK CONTAINS 0 RECORDS
+           RECORD CONTAINS 15 CHARACTERS
+           DATA RECORD IS DATOSSAL1.
+       01 DATOSSAL1.
+           05 OUT-GENERO PIC X(1).
+           05 OUT-EDAD PIC 9(2).
+           05 OUT-TIPO-DOC PIC 9(3).
+           05 OUT-SIGLO PIC X(2).
+           05 OUT-ANIO PIC X(2).
+      *******************************************
+       WORKING-STORAGE SECTION.
+       01 CONTADORES.
+           05 CONT-FEM PIC 9(2) VALUE ZERO.
+           05 CONT-MAS PIC 9(2) VALUE ZERO.
+           05 EDADES-FEM PIC 9(3) VALUE ZERO.
+           05 EDADES-MAS PIC 9(3) VALUE ZERO.
+           05 EDAD-PROM-FEM PIC 9(2)V99 VALUE ZERO.
+           05 EDAD-PROM-MAS PIC 9(2)V99 VALUE ZERO.
+           05 EOF PIC X VALUE 'Y'.
+           05 FS-DATOSLEC PIC 99.
+           05 FS-DATOSSAL PIC 99.
+      *********************************************
+      ********************************************
+      *       PROCEDURE DIVISION                 *
+      ********************************************
+       PROCEDURE DIVISION.
+       000-PRINCIPAL.
+           PERFORM 001-INICIO
+           PERFORM 100-EVALUACIONES UNTIL EOF = 'N'
+           PERFORM 200-PROCESO
+           PERFORM 300-SALIDA.
+       001-INICIO.
+           OPEN INPUT DATOSLEC
+           IF FS-DATOSLEC NOT = ZERO
+             STOP RUN
+           END-IF
+           OPEN OUTPUT DATOSSAL
+           IF FS-DATOSSAL NOT = ZERO
+             STOP RUN
+           END-IF
+           READ DATOSLEC
+           .
+      **
+      **
+       100-EVALUACIONES.
+           IF IN-GENERO EQUAL TO 'M'
+              COMPUTE CONT-FEM = CONT-FEM + 1
+              COMPUTE EDADES-FEM = EDADES-FEM + IN-EDAD
+             ELSE IF IN-GENERO EQUAL TO 'H'
+              COMPUTE CONT-MAS = CONT-MAS + 1
+              COMPUTE EDADES-MAS = EDADES-MAS + IN-EDAD
+             END-IF
+           END-IF
+           MOVE DATOSLEC1  TO  DATOSSAL1
+           WRITE DATOSSAL1
+           READ DATOSLEC AT END MOVE 'N' TO EOF.
+      **
+      **
+       200-PROCESO.
+           COMPUTE EDAD-PROM-FEM = EDADES-FEM / CONT-FEM
+           COMPUTE EDAD-PROM-MAS = EDADES-MAS / CONT-MAS
+           MOVE IN-GENERO TO OUT-GENERO
+           MOVE IN-EDAD TO OUT-EDAD
+           MOVE IN-TIPO-DOC TO OUT-TIPO-DOC
+           MOVE IN-SIGLO TO OUT-SIGLO
+           MOVE IN-ANIO TO OUT-ANIO
+           .
+      **   WRITE DATOSSAL1
+       300-SALIDA.
+           DISPLAY "*********************************************"
+           DISPLAY "SE LEYERON EN EL FICHERO:" CONT-MAS " HOMBRES"
+           DISPLAY "LA SUMA DE LA EDAD EN HOMBRES ES:" EDADES-MAS
+           DISPLAY "EL PROMEDIO EN HOMBRES ES:" EDAD-PROM-MAS
+           DISPLAY "*********************************************"
+           DISPLAY "SE LEYERON EN EL FICHERO:" CONT-FEM " MUJERES"
+           DISPLAY "LA SUMA DE LA EDAD EN MUJERES ES:" EDADES-FEM
+           DISPLAY "EL PROMEDIO EN MUJERES ES:" EDAD-PROM-FEM
+           DISPLAY "*********************************************".
+           CLOSE DATOSLEC
+           CLOSE DATOSSAL
+           STOP RUN.

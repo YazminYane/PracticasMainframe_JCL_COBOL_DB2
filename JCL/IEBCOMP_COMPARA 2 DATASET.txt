@@ -1,0 +1,15 @@
+//IEBCOMP JOB CLASS=A,MSGCLASS=H,MSGLEVEL=(1,1),NOTIFY=&HERC01,
+//            PRTY=15
+//*--------------------------------------------------------------
+//*                     COMAPARAR 2 DATASET
+//* SI EL CODIGO_RETORNO = O SON IGUALES, SI ES 8 ES SON DIFERENTES
+//* NO FUNCIONO
+//*--------------------------------------------------------------
+//PASO1    EXEC PGM=IEBCOMPR
+//SYSUT1   DD   DSN=ACADEMIA.COBOL.DATOS,DISP=SHR
+//SYSUT2   DD   DSN=ACADEMIA.COBOL.DATSO9,DISP=SHR
+//SYSPRINT DD   SYSOUT=*
+//SYSOUT   DD   SYSOUT=*
+//SYSIN    DD   *
+            COMPARE TYPORG=PS       <--TIPO DE ARCHIVO (PDS=PO)
+/*

@@ -1,0 +1,18 @@
+//IEBCOPY6 JOB CLASS=A,MSGCLASS=A,MSGLEVEL=(1,1),NOTIFY=&SYSUID,
+//             PRTY=15
+//*--------------------------------------------------------------
+//*    REEMPLAZAR UN ARCHIVO YA EXISTENTE EN LA LIBRERIA
+//* LAS LIBRERIAS DEBEN ESTAR CREADAS
+//*--------------------------------------------------------------
+//PASO1    EXEC PGM=IEBCOPY
+//DD1      DD   DSN=ACADEMIA.COBOL.COPYS,DISP=SHR   <-- INPUT DATASET
+//DD2      DD   DSN=ACADEMIA.COBOL.COSAS2,DISP=SHR  <-- INPUT DATASET
+//DD3      DD   DSN=ACADEMIA.COBOL.COPIA,DISP=SHR   <-- OUTPUT DATASET
+//SYSPRINT DD   SYSOUT=*
+//SYSOUT   DD   SYSOUT=*
+//SYSIN    DD   *
+            COPY OUTDD=DD3         <-- DD NAME OF OUTPUT DATASET
+                  INDD=DD1         <-- DD NAME OF INPUT DATASET
+                  INDD=DD2         <-- DD NAME OF INPUT DATASET
+          SELECT MEMBER=((MEMBER8,,R))   <-- MEMBER TO RENAME
+/*

@@ -1,0 +1,26 @@
+//PCOMPILA JOB ('COBOL1'),'COMPILA',
+//         CLASS=A,MSGCLASS=X,REGION=0M,
+//         MSGLEVEL=(1,1),NOTIFY=&SYSUID
+//*
+//*=================================================================== *
+//* DESCRIPCION:       COMPILA PROGRAMA                                *
+//*====================================================================
+//*====================================================================
+//* PONER EL NOMBRE DEL PROGRAMA EN ***MEMBER***                       *
+//STEP0    EXEC IGYWCLG,PARM.COBOL='LIB,APOST,XREF,MAP,OFFSET'
+//COBOL.STEPLIB DD DSN=IGY410.SIGYCOMP,DISP=SHR
+//*                                                                    *
+//***** LIBRERIA DONDE SE ENCUENTRA EL FUENTE                          *
+//*                                                                    *
+//COBOL.SYSIN DD DISP=SHR,DSN=IBMUSER.PO.SOURCE1(PROGPARM)
+//*                                                                    *
+//***** LIBRERIA DONDE SE ENCUENTRA LOS COPYS                          *
+//*                                                                    *
+//SYSOUT DD SYSOUT=*
+//COBOL.SYSLIB DD DISP=SHR,DSN=IBMUSER.PO.COPYS
+//*                                                                    *
+//***** LIBRERIA DONDE SE ENCUENTRA EL EJECUTABLE                      *
+//*                                                                    *
+//LKED.SYSLMOD DD DISP=SHR,DSN=IBMUSER.PO.LOAD1(PROGPARM)
+//
+**************************** Bottom of Data ****************************

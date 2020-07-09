@@ -1,0 +1,25 @@
+//IEBGEN4 JOB CLASS=A,MSGCLASS=A,MSGLEVEL=(1,1),NOTIFY=&SYSUID,
+//            PRTY=15
+//*---------------------------------------------------------------
+//*           COPIA ENTRE UN PS Y UN PDS MEMBER
+//* EL JCL YA DEBE ESTAR CREADO
+//* NO FUNCIONO
+//*---------------------------------------------------------------
+//PASO1    EXEC PGM=IEBGENER
+//SYSUT1   DD   DSN=ACADEMIA.COBOL.COPIA(MEMBER2),DISP=SHR
+//SYSUT2   DD   DSN=ACADEMIA.COBOL.FILE5,DISP=SHR
+//SYSPRINT DD   SYSOUT=*
+//SYSOUT   DD   SYSOUT=*
+//SYSIN    DD   DUMMY
+/*
+//*---------------------------------------------------------------
+//*  COPIAR UN PDS MEMBER A UN PS
+//* NO FUNCIONO
+//*---------------------------------------------------------------
+//PASO1    EXEC PGM=IEBGENER
+//SYSUT2   DD   DSN=ACADEMIA.COBOL.FILE5,DISP=SHR
+//SYSUT1   DD   DSN=ACADEMIA.COBOL.COPIA(MEMBER2),DISP=SHR
+//SYSPRINT DD   SYSOUT=*
+//SYSOUT   DD   SYSOUT=*
+//SYSIN    DD   DUMMY
+/*

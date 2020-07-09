@@ -1,0 +1,13 @@
+Las instrucciones para configurar el DB2 en CICS son las siguientes:
+
+1.- Limpiar pantalla
+
+2.- CEMT I DB2CONN
+                *AUTHID (IBMUSER)
+                *CONNECTST (CONNECTED)
+                *DB2ID ( DB9G)
+
+3.- CEMT I DB2TRAN
+                *DB2E (DB9GE)
+
+4.- CEMT I DB2ENTRY

@@ -1,0 +1,87 @@
+MAPASET  DFHMSD TYPE=DSECT,MODE=INOUT,LANG=COBOL,TERM=ALL,             X00010000
+               STORAGE=AUTO                                             00011000
+MAPA4    DFHMDI SIZE=(24,80),LINE=1,COLUMN=1,HILIGHT=OFF,              X00020000
+               DSATTS=HILIGHT,CTRL=FREEKB                               00030000
+* MAPA DE CONSULTA                                                      00031000
+         DFHMDF POS=(1,1),LENGTH=8,INITIAL='TRX MAP4',                 X00040000
+               ATTRB=(ASKIP,NORM)                                       00050000
+         DFHMDF POS=(1,28),LENGTH=16,INITIAL='MANTENIMIENTO DE',       X00060000
+               ATTRB=(ASKIP,NORM)                                       00070000
+         DFHMDF POS=(1,45),LENGTH=9,INITIAL='EMPLEADOS',               X00080000
+               ATTRB=(ASKIP,NORM)                                       00090000
+*                                                                       00091000
+         DFHMDF POS=(3,1),LENGTH=15,INITIAL='TECLEE OPCION: ',         X00100000
+               ATTRB=(PROT,NORM)                                        00110000
+OPCION   DFHMDF POS=(3,17),LENGTH=1,INITIAL='_',                       X00111000
+               ATTRB=(UNPROT,IC)                                        00112000
+         DFHMDF POS=(3,19),LENGTH=1,INITIAL=' ',                       X00113000
+               ATTRB=ASKIP                                              00114000
+         DFHMDF POS=(3,21),LENGTH=9,INITIAL='(A,B,M,C)',               X00115000
+               ATTRB=(ASKIP,NORM)                                       00116000
+*                                                                       00117000
+         DFHMDF POS=(5,1),LENGTH=20,INITIAL='TECLEE INFORMACION Y',    X00118000
+               ATTRB=(ASKIP,NORM)                                       00119000
+         DFHMDF POS=(5,22),LENGTH=14,INITIAL='PRESIONE ENTER',         X00119100
+               ATTRB=(ASKIP,NORM)                                       00119200
+*                                                                       00130000
+         DFHMDF POS=(7,1),LENGTH=17,INITIAL='NUMERO EMPLEADO :',       X00151000
+               ATTRB=(PROT,NORM)                                        00152000
+NUMEMP   DFHMDF POS=(7,19),LENGTH=6,INITIAL='______',                  X00152100
+               ATTRB=(UNPROT)                                           00152200
+         DFHMDF POS=(7,26),LENGTH=1,INITIAL=' ',ATTRB=ASKIP             00152300
+*                                                                       00152400
+         DFHMDF POS=(8,1),LENGTH=2,INITIAL='--',ATTRB=(PROT)            00152500
+NOMBRE   DFHMDF POS=(8,4),LENGTH=40,ATTRB=(PROT,NORM)                   00152600
+*                                                                       00152700
+         DFHMDF POS=(9,1),LENGTH=2,INITIAL='--',ATTRB=(PROT)            00153000
+DEPART   DFHMDF POS=(9,4),LENGTH=3,ATTRB=(UNPROT,NORM)                  00153100
+         DFHMDF POS=(9,8),LENGTH=1,INITIAL=' ',ATTRB=PROT               00154000
+*                                                                       00154400
+         DFHMDF POS=(10,1),LENGTH=2,INITIAL='--',ATTRB=(PROT)           00154500
+NOM      DFHMDF POS=(10,4),LENGTH=20,ATTRB=(UNPROT,NORM)                00155000
+         DFHMDF POS=(10,26),LENGTH=1,INITIAL=' ',ATTRB=PROT             00155100
+*                                                                       00155200
+         DFHMDF POS=(11,1),LENGTH=2,INITIAL='--',ATTRB=(PROT)           00155300
+APAT     DFHMDF POS=(11,4),LENGTH=20,ATTRB=(UNPROT,NORM)                00155400
+         DFHMDF POS=(11,25),LENGTH=1,INITIAL=' ',ATTRB=PROT             00155500
+*                                                                       00155600
+         DFHMDF POS=(12,1),LENGTH=2,INITIAL='--',ATTRB=(PROT)           00155700
+AMAT     DFHMDF POS=(12,4),LENGTH=20,ATTRB=(UNPROT,NORM)                00155800
+         DFHMDF POS=(12,25),LENGTH=1,INITIAL=' ',ATTRB=PROT             00155900
+*                                                                       00159000
+         DFHMDF POS=(13,1),LENGTH=2,INITIAL='--',ATTRB=(PROT)           00159100
+TEL      DFHMDF POS=(13,4),LENGTH=10,ATTRB=(UNPROT,NORM)                00159200
+         DFHMDF POS=(13,15),LENGTH=1,INITIAL=' ',ATTRB=PROT             00159300
+*                                                                       00159400
+         DFHMDF POS=(14,1),LENGTH=2,INITIAL='--',ATTRB=(PROT)           00159500
+DIRA     DFHMDF POS=(14,4),LENGTH=30,ATTRB=(UNPROT,NORM)                00159600
+         DFHMDF POS=(14,35),LENGTH=1,INITIAL=' ',ATTRB=PROT             00159700
+*                                                                       00159800
+         DFHMDF POS=(15,1),LENGTH=2,INITIAL='--',ATTRB=(PROT)           00159900
+SEXO     DFHMDF POS=(15,4),LENGTH=1,ATTRB=(UNPROT,NORM)                 00160000
+         DFHMDF POS=(15,6),LENGTH=1,INITIAL=' ',ATTRB=PROT              00160100
+*                                                                       00160200
+         DFHMDF POS=(16,1),LENGTH=2,INITIAL='--',ATTRB=(PROT)           00160300
+FNAC     DFHMDF POS=(16,4),LENGTH=10,ATTRB=(UNPROT,NORM)                00160400
+         DFHMDF POS=(16,15),LENGTH=1,INITIAL=' ',ATTRB=PROT             00160500
+*                                                                       00160600
+         DFHMDF POS=(17,1),LENGTH=2,INITIAL='--',ATTRB=(PROT)           00160700
+PUESTO   DFHMDF POS=(17,4),LENGTH=15,ATTRB=(UNPROT,NORM)                00160800
+         DFHMDF POS=(17,20),LENGTH=1,INITIAL=' ',ATTRB=PROT             00160900
+*                                                                       00161000
+         DFHMDF POS=(18,1),LENGTH=2,INITIAL='--',ATTRB=(PROT)           00161100
+SALARIO  DFHMDF POS=(18,4),LENGTH=13,ATTRB=(UNPROT,NORM)                00161200
+         DFHMDF POS=(18,18),LENGTH=1,INITIAL=' ',ATTRB=PROT             00161300
+*                                                                       00161400
+         DFHMDF POS=(19,1),LENGTH=2,INITIAL='--',ATTRB=(PROT)           00161500
+BONO     DFHMDF POS=(19,4),LENGTH=13,ATTRB=(UNPROT,NORM)                00161600
+         DFHMDF POS=(19,18),LENGTH=1,INITIAL=' ',ATTRB=PROT             00161700
+*                                                                       00161800
+         DFHMDF POS=(20,1),LENGTH=2,INITIAL='--',ATTRB=(PROT)           00161900
+COM      DFHMDF POS=(20,4),LENGTH=13,ATTRB=(UNPROT,NORM)                00162000
+         DFHMDF POS=(20,18),LENGTH=1,INITIAL=' ',ATTRB=PROT             00162100
+*                                                                       00162200
+MSG      DFHMDF POS=(21,10),LENGTH=40,ATTRB=(PROT,NORM)                 00163400
+         DFHMDF POS=(22,18),LENGTH=1,ATTRB=(FSET,PROT)                  00163500
+         DFHMSD TYPE=FINAL                                              00164000
+         END                                                            00170000
